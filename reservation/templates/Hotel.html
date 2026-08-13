@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Hotel</title>
+    <style>
+        body {
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            height: 100vh;
+            padding:40px 40px;
+            background-color:rgb(228, 221, 221);
+        }
+        
+        form input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 15px;
+            border: 1px solid;
+            max-width: 450px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        form input:focus {
+            border-color: red;
+            outline: none;
+            box-shadow: 2px 0px 2px red;
+        }
+        .form-container{
+            border: 1px solid;
+            border-radius: 12px;
+            width: 100%;
+            padding: 40px 45px;
+            max-width: 350px;
+            box-shadow: 0 10px 12px;
+            background-color: white;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 15px;
+            border: 1px solid;
+            max-width: 450px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 12px;
+            background-color: green;
+        }
+        .btn:hover {
+            background-color: rgb(40, 85, 40);
+            border-color: white;
+        }
+        #message {
+            border-radius: 12px;
+            text-align: center;
+            display: flex;
+            margin: 0 10px;
+            width: 100%;
+            max-width:450px;
+        }
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <script src="{% static 'reservation/js/hotel.js' %}" defer></script> 
+    <form action="" method="post" id="form">
+        {% csrf_token %}
+        <div class="form-container">
+            <div id="message">
+
+            </div>
+            <div class="h-nom">
+                <label for="nom" class="label-h">Hotel</label>
+                <input type="text" id="nom" placeholder="Nom de l'hotel" required>
+            </div>
+            <div class="h-v">
+                <label for="ville" class="label-h">ville</label>
+                <input type="text" id="ville" placeholder="Ville" required>
+            </div>
+            <div class="h-s">
+                <label for="secteur" class="label-h">Secteur</label>
+                <input type="number" id="secteur" placeholder="Secteur" required>
+            </div>
+            <div class="h-l">
+                <label for="localisation" class="label-h">Localisation</label>
+                <input type="text" id="localisation" placeholder="Localisation" required>
+            </div>
+            <div class="h-t">
+                <label for="tel" class="label-h">Télephone</label>
+                <input type="number" id="tel" placeholder="70502300" required>
+            </div>
+            <div class="h-e">
+                <label for="email" class="label-h">Adress-mail</label>
+                <input type="email" id="email" placeholder="ex:burkinafaso@gmail.com" required>
+            </div>
+            <div class="h-ph">
+                <label for="photo" class="label-h">Image/Photo</label>
+                <input type="file" id="photo" placeholder="+Images" required>
+            </div>
+            <div class="h-password">
+                <label for="password" class="label-h">Mot de passe</label>
+                <input type="password" id="password" placeholder="Mot de passe" required>
+            </div>
+            <div class="h-conf_password">
+                <label for="conf_password" class="label-h">Confirmer le mot de passe</label>
+                <input type="password" id="conf_password" placeholder="confirmer le mot de passe">
+            </div>
+            <button class="btn" type="submit">Créer le compte</button>
+            <br>
+            <br>
+            <span>----------------------------ou----------------------------</span>
+            <br>
+            <br>
+            <span>Déjà inscrit?</span>
+            <a href="{% url 'login' %}">Se connecter</a>
+        </div>
+        
+    </form>
+</body>
+</html>

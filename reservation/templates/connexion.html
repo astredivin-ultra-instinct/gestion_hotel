@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>connexion</title>
+    <style>
+        h2 {
+            color: rgb(32, 32, 162);
+            background-color: white;
+            color: green;
+            border: 1px solid;
+            border-radius: 12px;
+        }
+        body {
+            height: 100vh;
+            text-align: center;
+            justify-content: center;
+            display: flex;
+            background-color: rgb(210, 204, 204);
+        }
+        .container {
+            text-align: center;
+            padding: 80px 80px;
+            border: 1px solid;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 400px;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            box-shadow: 0 3px 4px;
+
+
+        }
+        form label {
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            padding: 12px 15px;
+
+        }
+        form input {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            display: flex;
+            border-radius: 12px;
+            font-size: 15px;
+            padding: 12px 15px;
+            border: 1px solid;
+            margin-right: 50px;
+            margin-bottom: 15px;
+
+        }
+        form input:focus {
+            border-color: blue;
+            box-shadow: 0 2px 2px blue;
+            outline: none;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .btn {
+            background-color: green;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border-radius: 12px;
+            font-size: 15px;
+            padding: 12px 15px;
+            border: 1px solid;
+            margin-top: 20px;
+            margin-left: 15px;
+        }
+        .cadre {
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+        a {
+            text-decoration: none;
+            color: green;
+        }
+        #message {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            justify-content: center;
+            display: flex;
+            border-radius: 12px;
+            font-size: 15px;
+            padding: 12px 15px;
+            margin-right: -5px;
+            margin-bottom: 15px;   
+        }
+    </style>
+</head>
+</body>
+<script src="{% static 'reservation/js/connexion.js' %}" defer></script>
+<div class="cadre">
+    <form action="" method="post" id="form">
+        {% csrf_token %}
+        <div class="container">
+            <h2>Votre espace sécurisée de gestion de chambre d'hotel</h2>
+            <div id="message">
+
+            </div>
+            <div class="c-nom">
+                <label for="username" class="label-c">Address-mail</label>
+                <input type="email" name="username" id="username" placeholder="ex:weshcarre@gmail.com" required>
+            </div>
+            <div class="c-password">
+                <label for="password"  class="label-c">Mot de passe</label>
+                <input type="password" name="password" id="password" placeholder="**********" required>
+            </div>
+            <button class="btn" title="Enfoiré">Se connecter</button>
+            <br>
+            <br>
+            <span>----------------------------ou----------------------------</span>
+            <span>Nouveau ? <a href="{% url 'acceuil' %}">Créer un compte</a></span>
+        </div>
+    </form>
+</div>
+<body>
+
+</html>

@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+
+        }
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px;
+        }
+        header {
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-color: rgb(49, 48, 48);
+            color: white;
+            border-bottom: 1px solid;
+        }
+        .main {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+        footer {
+            height: 70px;
+            position: relative;
+            border-top: 1px solid;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            display: flex;
+        }
+        .add {
+            position: absolute;
+            top: -25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgb(0,0,0,0.2);
+            cursor: pointer;
+            background-color: green;
+        }
+        .add:hover{
+            background-color: rgb(35, 71, 35);
+        }
+        .add:active {
+            transform:  scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <script src="{% static 'reservation/js/profile.js' %}" defer></script>
+    <div class="container">
+        <header>
+            <button onclick="afficherPage('para')">⚙️</button>
+            <button onclick="afficherPage('profil')">👤</button>
+            <button onclick="afficherPage('acceuil')">Acceuil</button>
+        </header>
+        <div class ="main">
+            <div id="acceuil" class="acceuil">La plateforme de reservation d'hotel</div>
+            <div id="para" class="page" style="display: none;" >Paramètres de réglage</div>
+            <div id="profil" class="page" style="display: none;"> Profile </div>
+        </div>
+        <footer>
+            <button class="add" title="Enfoiré">+</button>
+        </footer>  
+    </div>
+
+</body>
+</html>
