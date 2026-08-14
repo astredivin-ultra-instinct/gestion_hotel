@@ -20,11 +20,11 @@ function Message(texte, type) {
     
     // type
     if (type === 'success') {
-        container.style.backgroundColor = '#d4edda';
+        container.style.backgroundColor = '#eff5f0';
         container.style.color = '#155724';
     } else {
         container.style.backgroundColor = '#f8d7da';
-        container.style.color = '#721c24'; 
+        container.style.color = '#f1f1f1'; 
     }
 
     // Effacer le message automatiquement après 5 secondes

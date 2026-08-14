@@ -73,16 +73,21 @@ def connexion(request):
 @login_required
 def add_chambre(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        form = ChambreForm(data)
+        #data = json.loads(request.body)
+        exist = Chambre.objects.filter(user = request.user)
+        form = ChambreForm(request.POST, request.FILES)
         if form.is_valid():
+            numero = form.cleaned_data['numero']
+            #if Chambre.objects.filter(user= request.user,numero=numero).exist():
+            for e in exist:
+                if e.numero == numero:
+                    return JsonResponse({'success': False,'message':'Ce numéro de chambre à déjà été ajouté !'} )
             chambre = form.save(commit=False)
             chambre.user = request.user
             chambre.save()
-            return JsonResponse({'success':True,'message':"Chambre ajouté avec succès"})
-            return redirect('Add_chambre')
+            return JsonResponse({'success':True,'message':"Chambre ajouté avec succès",'redirect_url':reverse('profiles')})
         else:
-            return JsonResponse({'success':False,'error':form.errors})
+            return JsonResponse({'success':False,'error':form.errors.as_json()})
 
 @login_required
 def supp_chambre(request, k):
@@ -107,8 +112,8 @@ def reserver_chambre(request, k):
     chambre = get_object_or_404(Chambre, id=k)
     if not chambre.reserver :
         if request.method == 'POST':
-            data = json.loads(request.body)
-            form = ReservationForm(data)
+            #data = json.loads(request.body)
+            form = ReservationForm(request.POST)
             if form.is_valid():
                 reserve = form.save(commit=False)
                 reserve.chambre = chambre
@@ -147,3 +152,13 @@ def acceuil(request):
 
 def logine(request):
     return render(request, 'connexion.html')
+
+@login_required
+def deconnexion(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'success':True,'message':" Vous avez été déconnecté",'redirect_url':reverse('acceuil')})
+    else:
+        return JsonResponse({'success':False, 'message':"Méthode non autorisée!"})
+
+    

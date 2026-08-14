@@ -19,7 +19,7 @@ class CompteForm(forms.ModelForm):
 class ChambreForm(forms.ModelForm):
     class Meta:
         model = Chambre
-        fields = ['numero','etage','nombre','prix_heure','prix_jour','prix_mois']
+        fields = ['numero','etage','photo','nombre','prix_heure','prix_jour','prix_mois']
 
 class ReservationForm(forms.ModelForm):
     class Meta:

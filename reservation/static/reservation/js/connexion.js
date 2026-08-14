@@ -14,6 +14,7 @@ async function sendReq(url, data) {
 function message(texte, type) {
     const msg = document.getElementById('message');
     msg.textContent = texte;
+    msg.style.display = 'block';
     if(type) {
         msg.style.color = 'rgb(20, 80, 23)';
         msg.style.backgroundColor = 'rgb(158, 206, 168)';

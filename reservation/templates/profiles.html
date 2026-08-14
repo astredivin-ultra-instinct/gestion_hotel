@@ -52,6 +52,7 @@
             align-items: center;
             z-index: 10;
             display: flex;
+            background-color:rgb(49, 48, 48);
         }
         .add {
             position: absolute;
@@ -75,23 +76,150 @@
         .add:active {
             transform:  scale(1.1);
         }
+        .btn {
+            width: 100%;
+            background-color: green;
+            border: 1px solid white;
+            border-radius: 14px;
+            padding: 10px 15px;
+            margin-top: 10px;
+        }
+        .btn:hover{
+            background-color: rgb(37, 80, 37);
+        }
+        .btn:active {
+            transform: scale(1.1);
+        }
+        form input {
+            width: 100%;
+            max-width: 450px;
+            padding: 12px 12px;
+            text-align: center;
+            justify-content: center;
+            border: 2px solid rgb(137, 141, 142);
+            border-radius: 13px;
+        }
+        form input:focus {
+            border-color: rgba(246, 10, 10, 0.877);
+            outline: none;
+            box-shadow: 3px 0 2px;
+
+        }
+        form label {
+            display: flex;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            justify-content: center;
+        }
+        h2 {
+            display: flex;
+            text-align: left;
+            color: green;
+            background-color: rgb(241, 234, 234);
+            border: 1px solid green;
+            border-radius: 13px;
+            padding: 12px 15px;
+        }
+        .head {
+            background-color: white;
+            border: 1px solid;
+            padding: 10px 12px;
+            border-radius: 50%;
+        } 
+        .head:hover {
+            background-color: gray;
+        }
+        #message {
+            width: 100%;
+            max-width: 450px;
+            padding: 12px 12px;
+            text-align: center;
+            justify-content: center;
+            /*border: 1px solid rgb(229, 24, 24);*/
+            border-radius: 13px;
+        }
+        .dec {
+            font-size: 15px;
+            color: rgb(20, 13, 13);
+            background-color: rgb(222, 222, 222, 0.3);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            justify-content: center;
+            border: px solid black;
+            border-radius: 15px;
+            width: 30%;
+            padding: 12px 14px;
+            margin-top: 100px;
+            cursor: pointer;
+        }
+        .dec:hover{
+            background-color: rgb(168, 160, 160, 0.5);
+        }
+        .dec:active{
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
     <script src="{% static 'reservation/js/profile.js' %}" defer></script>
     <div class="container">
         <header>
-            <button onclick="afficherPage('para')">⚙️</button>
-            <button onclick="afficherPage('profil')">👤</button>
-            <button onclick="afficherPage('acceuil')">Acceuil</button>
+            <button onclick="afficherPage('para')" class="head">⚙️</button>
+            <button onclick="afficherPage('profil')" class="head">👤</button>
+            <button onclick="afficherPage('acceuil')" class="head">Acceuil</button>
         </header>
         <div class ="main">
-            <div id="acceuil" class="acceuil">La plateforme de reservation d'hotel</div>
-            <div id="para" class="page" style="display: none;" >Paramètres de réglage</div>
+            <div id="acceuil" class="acceuil">
+                <h2>La plateforme de reservation d'hotel</h2>
+                <div id="message">
+
+                </div>
+            </div>
+            <div id="para" class="page" style="display: none;" >
+                <h2>Paramètres de réglage</h2>
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
+                <button class="dec" title="va te faire foutre">Déconnexion</button>
+            </div>
             <div id="profil" class="page" style="display: none;"> Profile </div>
+            <form action="" id="form">
+                {% csrf_token %}
+                <div id="add" class="page" style="display: none;">
+                    <div class="c-numero">
+                        <label for="numero" class="label-c">Numero de la chambre</label>
+                        <input type="number" id="numero" placeholder="Numero de chambre" required>
+                    </div>
+                    <div class="c-etage">
+                        <label for="etage" class="label-c">Numero de l'etage</label>
+                        <input type="number" id="etage" placeholder="Air +" required>
+                    </div>
+                    <div class="c-nombre">
+                        <label for="nombre" class="label-c">Nombre de chambre</label>
+                        <input type="number" id="nombre" placeholder="1" required>
+                    </div>
+                    <div class="c-photo">
+                        <label for="photo" class="label-c">Image/Photo</label>
+                        <input type="file" id="photo" placeholder="Images" required>
+                    </div>
+                    <div class="c-prix_heure">
+                        <label for="prix_heure" class="label-c">Prix par heure</label>
+                        <input type="number" id="prix_heure" placeholder="prix/heure">
+                    </div>
+                    <div class="c-prix_jour">
+                        <label for="prix_jour">Prix par jour</label>
+                        <input type="number" id="prix_jour" placeholder="prix/jour">
+                    </div>
+                    <div class="c-prix_mois">
+                        <label for="prix_mois" class="label-c">Prix par mois</label>
+                        <input type="number" id="prix_mois" placeholder="prix/mois">
+                    </div>
+                    <button class="btn" type="submit" title="Enculé">Ajouter</button>                
+                </div>
+            </form>
         </div>
         <footer>
-            <button class="add" title="Enfoiré">+</button>
+            <button onclick="afficherPage('add')" class="add" title="Enfoiré">+</button>
         </footer>  
     </div>
 
