@@ -18,9 +18,11 @@ function message(texte, type) {
     if(type) {
         msg.style.color = 'rgb(20, 80, 23)';
         msg.style.backgroundColor = 'rgb(158, 206, 168)';
+        msg.style.borderColor = 'rgb(19, 108, 19)'
     } else {
         msg.style.color = 'rgba(241, 15, 15, 0.92)';
         msg.style.backgroundColor = 'rgba(200, 146, 146, 0.91)';
+        msg.style.borderColor = 'rgb(225, 20, 20)'
     }
     setTimeout( () => {
         msg.style.display = 'none';

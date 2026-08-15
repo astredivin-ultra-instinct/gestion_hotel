@@ -22,14 +22,18 @@ function Message(texte, type){
     const msg = document.getElementById('message');
     msg.textContent = texte;
     msg.style.display = 'block';
-    msg.style.border = '1px solid';
-    msg.style.borderColor = 'rgb(239, 22, 22)'
+    
+   
     if(type === 'success') {
         msg.style.color = 'rgb(11, 93, 22)';
-        msg.style.backgroundColor = 'rgb(53, 142, 62)'
+        msg.style.backgroundColor = 'rgb(199, 244, 204)'
+        msg.style.border = '1px solid';
+        msg.style.borderColor = 'rgb(13, 163, 46)'
     } else {
         msg.style.color = 'rgba(230, 14, 14, 0.99)';
-        //msg.style.backgroundColor = 'rgba(234, 232, 232, 0.93)'
+        msg.style.backgroundColor = 'rgba(227, 181, 181, 0.93)'
+        msg.style.border = '1px solid';
+        msg.style.borderColor = 'rgb(239, 22, 22)'
     }
     setTimeout( () =>{
         msg.style.display = 'none';
@@ -53,9 +57,10 @@ async function add_chambre() {
         console.log(rep.message);
         Message(rep.message, 'success');
         document.getElementById('form').reset();
-        //window.location.href = rep.redirect_url;
+        window.location.href = rep.redirect_url;
     } else {
         Message(rep.message, 'error');
+        document.getElementById('form').reset();
         console.log(rep.message);
         return;
     }
@@ -71,9 +76,6 @@ document.querySelector('#form').addEventListener('submit',
 );
 
 //Deconnection
-
-
-
 document.querySelector('.dec').addEventListener("click",
     async function(e){
         e.preventDefault();
@@ -94,3 +96,65 @@ document.querySelector('.dec').addEventListener("click",
     }
 );
 
+
+// affichage dynamique des chambres
+let chambreId = null;
+function affichageChambre() {
+    fetch('/affichage/')
+    .then(response => response.json())
+    .then(data => {
+        const contenu = document.querySelector('.contenu');
+        contenu.innerHTML = '';
+        data.forEach(c => {
+            const chambreCard = document.createElement('div');
+            chambreCard.className = 'chambre-card';
+            chambreCard.innerHTML = `
+                         <h3>Hôtel : ${c.hotel} </h3>
+                         <img src="${c.photo}" alt="Image de chambres" >
+                         <p><strong>Numéro de chambre:</strong>${c.numero}</p>
+                         <p><strong>Etage :</strong>${c.etage}</p>
+                         <p><strong>Tarifs:</strong>${c.prix_heure} / heure | ${c.prix_jour} / jour | ${c.prix_mois} / mois </p>
+                         <button class="btn" onclick="reserverChambre(${c.id})">Reserver</button>
+                         <hr> 
+                         `;
+            // ajout de la carte chambre dans le conteneur principal
+            contenu.appendChild(chambreCard);
+
+        });
+
+    })
+    .catch(error => console.error('Erreur lors du chargement des données:', error));
+}
+document.addEventListener('DOMContentLoaded', affichageChambre);
+
+//Reservation de chambre
+function reserverChambre(id) {
+    chambreId = id;
+    console.log(chambreId);
+    document.getElementById('acceuil').style.display = 'none';
+    document.getElementById('reservation').style.display = 'block';}
+    //const d = document.getElementById('reservation');
+
+document.querySelector('#Rform').addEventListener('submit',
+    async function(e) {
+        e.preventDefault();
+        const data = new FormData();
+        data.append('nom', document.querySelector('#nom').value);
+        data.append('prenom', document.querySelector('#prenom').value);
+        data.append('tel', document.querySelector('#tel').value);
+        data.append('tarif', document.querySelector('#tarif').value);
+        data.append('temps', document.querySelector('#temps').value);
+        const rep = await sendReq(`/reservation/${chambreId}`, data);
+
+        if (rep.success) {
+            Message(rep.message, 'success');
+            console.log(rep.message);
+            document.getElementById('Rform').reset();
+            window.location.href = `/profiles/`;
+
+        } else {
+            Message(rep.message, 'error');
+            console.log(rep.error);
+        }
+    }
+);

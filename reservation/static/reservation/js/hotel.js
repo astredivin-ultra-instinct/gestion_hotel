@@ -22,9 +22,11 @@ function Message(texte, type) {
     if (type === 'success') {
         container.style.backgroundColor = '#eff5f0';
         container.style.color = '#155724';
+        container.style.borderColor = 'rgb(11, 150, 25)'
     } else {
-        container.style.backgroundColor = '#f8d7da';
-        container.style.color = '#f1f1f1'; 
+        container.style.backgroundColor = '#e98b8b';
+        container.style.color = '#fe1616';
+        container.style.borderColor ='rgb(242, 14, 14)' 
     }
 
     // Effacer le message automatiquement après 5 secondes
@@ -60,7 +62,7 @@ async function soummette() {
     }*/
     const rest = await sendReq('/creation_compte/', data);
     if (rest.success) {
-        alert(rest.message);
+        console(rest.message);
         Message(rest.message, 'success');
         document.getElementById('form').reset();
         window.location.href = rest.redirect_url;

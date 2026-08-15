@@ -24,6 +24,7 @@ class Chambre(models.Model):
     prix_mois =models.IntegerField()
     commentaire = models.TextField(max_length=201,null=True,blank = True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     reserver = models.BooleanField(default=False)
 
 class Reservation(models.Model):

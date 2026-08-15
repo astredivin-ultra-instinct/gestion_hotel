@@ -16,7 +16,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: auto;
+            min-height: 100vh;
             overflow: hidden;
 
         }
@@ -99,6 +100,15 @@
             border: 2px solid rgb(137, 141, 142);
             border-radius: 13px;
         }
+        #tarif{
+            width: 100%;
+            max-width: 450px;
+            padding: 12px 12px;
+            text-align: center;
+            justify-content: center;
+            border: 2px solid rgb(137, 141, 142);
+            border-radius: 13px;         
+        }
         form input:focus {
             border-color: rgba(246, 10, 10, 0.877);
             outline: none;
@@ -113,13 +123,19 @@
             justify-content: center;
         }
         h2 {
-            display: flex;
-            text-align: left;
-            color: green;
-            background-color: rgb(241, 234, 234);
-            border: 1px solid green;
-            border-radius: 13px;
-            padding: 12px 15px;
+            font-size: 15px;
+            color: rgb(14, 120, 29);
+            background-color: rgb(222, 222, 222, 0.3);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            justify-content: center;
+            border: 1px solid black;
+            border-color: green;
+            border-radius: 15px;
+            width: 100%;
+            padding: 14px 14px;
+
         }
         .head {
             background-color: white;
@@ -138,6 +154,7 @@
             justify-content: center;
             /*border: 1px solid rgb(229, 24, 24);*/
             border-radius: 13px;
+            margin-top: 10px;
         }
         .dec {
             font-size: 15px;
@@ -149,8 +166,8 @@
             justify-content: center;
             border: px solid black;
             border-radius: 15px;
-            width: 30%;
-            padding: 12px 14px;
+            width: 65%;
+            padding: 12px 18px;
             margin-top: 100px;
             cursor: pointer;
         }
@@ -160,22 +177,45 @@
         .dec:active{
             transform: scale(1.1);
         }
+        .contenu {
+            display: block;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 40px;
+            overflow-y: auto;
+        }
+        .chambre-card {
+            align-items: center;
+            justify-content: center;
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            padding: auto,        }
     </style>
 </head>
 <body>
     <script src="{% static 'reservation/js/profile.js' %}" defer></script>
     <div class="container">
         <header>
-            <button onclick="afficherPage('para')" class="head">⚙️</button>
-            <button onclick="afficherPage('profil')" class="head">👤</button>
-            <button onclick="afficherPage('acceuil')" class="head">Acceuil</button>
+            <button onclick="afficherPage('para')" class="head" title="paramètres">⚙️</button>
+            <button onclick="afficherPage('acceuil')" class="head" title="acceuil principal">Acceuil</button>
+            <button onclick="afficherPage('profil')" class="head" title="mon profile">👤</button>
         </header>
         <div class ="main">
-            <div id="acceuil" class="acceuil">
+            <div id="acceuil" class="page" >
                 <h2>La plateforme de reservation d'hotel</h2>
-                <div id="message">
-
+                <div class="acceuil-contenaire">
+                    <div class="posteur">
+                        <div class="contenu">
+                        </div>           
+                    </div>
                 </div>
+
+            </div>
+            <div id="message">
+
             </div>
             <div id="para" class="page" style="display: none;" >
                 <h2>Paramètres de réglage</h2>
@@ -204,17 +244,46 @@
                     </div>
                     <div class="c-prix_heure">
                         <label for="prix_heure" class="label-c">Prix par heure</label>
-                        <input type="number" id="prix_heure" placeholder="prix/heure">
+                        <input type="number" id="prix_heure" placeholder="prix/heure" required>
                     </div>
                     <div class="c-prix_jour">
                         <label for="prix_jour">Prix par jour</label>
-                        <input type="number" id="prix_jour" placeholder="prix/jour">
+                        <input type="number" id="prix_jour" placeholder="prix/jour" required>
                     </div>
                     <div class="c-prix_mois">
                         <label for="prix_mois" class="label-c">Prix par mois</label>
-                        <input type="number" id="prix_mois" placeholder="prix/mois">
+                        <input type="number" id="prix_mois" placeholder="prix/mois" required>
                     </div>
                     <button class="btn" type="submit" title="Enculé">Ajouter</button>                
+                </div>
+            </form>
+            <form action="" id="Rform">
+                <div id="reservation" class="page" style="display: none;">
+                    <div class="r-nom">
+                        <label for="nom" class="label-r">Nom</label>
+                        <input type="text" id="nom" placeholder="Nom" required>
+                    </div>
+                    <div class="r-prenom">
+                        <label for="prenom" class="label-r">Prenom</label>
+                        <input type="text" id="prenom" placeholder="Prenom" required>
+                    </div>
+                    <div class="tel">
+                        <label for="tel" class="label-r">Télephone</label>
+                        <input type="tel" id="tel" placeholder="+226 75002136" required>
+                    </div>
+                    <div class="r-tarif">
+                        <label for="tarif" class="label-r">Séjour</label>
+                            <select name="tarif" id="tarif">
+                                <option value="heure">heure</option>
+                                <option value="jour">Jour</option>
+                                <option value="mois">Mois</option>
+                            </select>
+                    </div>
+                    <div class="r-temps">
+                        <label for="temps" class="label-r">Temps</label>
+                        <input type="number" id="temps" placeholder="nombre de jour/heure/mois">
+                    </div>
+                    <button type="submit" class="btn">Valider</button>
                 </div>
             </form>
         </div>

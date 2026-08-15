@@ -14,7 +14,7 @@ from .forms import CompteForm, ChambreForm, ReservationForm
 
 # Create your views here.
 
-def profile(request):
+def affichage(request):
     #data = json.loads(request.body)
     chambres = Chambre.objects.all()
     data = []
@@ -23,10 +23,11 @@ def profile(request):
             'id': c.id,
             'numero' : c.numero,
             'etage' : c.etage,
+            'photo': c.photo.url if c.photo else '',
             'prix_heure' : c.prix_heure,
             'prix_jour' : c.prix_jour,
             'prix_mois' : c.prix_mois,
-            'hotel' : c.user.nom,
+            'hotel' : c.hotel.nom,
         })
     return JsonResponse(data, safe = False)
 
@@ -84,6 +85,7 @@ def add_chambre(request):
                     return JsonResponse({'success': False,'message':'Ce numéro de chambre à déjà été ajouté !'} )
             chambre = form.save(commit=False)
             chambre.user = request.user
+            chambre.hotel = request.user.hotel
             chambre.save()
             return JsonResponse({'success':True,'message':"Chambre ajouté avec succès",'redirect_url':reverse('profiles')})
         else:
@@ -110,7 +112,9 @@ def mod_chambre(request, k):
 
 def reserver_chambre(request, k):
     chambre = get_object_or_404(Chambre, id=k)
-    if not chambre.reserver :
+    chambre.refresh_from_db()
+    print(f"la chambre est réservée ?:{chambre.reserver}")
+    if not chambre.reserver:
         if request.method == 'POST':
             #data = json.loads(request.body)
             form = ReservationForm(request.POST)
@@ -127,15 +131,15 @@ def reserver_chambre(request, k):
                     reserve.total = chambre.prix_jour * reserve.temps
                 reserve.save()
                 chambre.reserver = True
-                chambre.save
+                chambre.save()
                 return JsonResponse({'success':True, 'message':"Chambre reservée avec succès", 'total':float(reserve.total)})
 
             else:
-                return JsonResponse({'success': False, 'error':form.errors})
+                return JsonResponse({'success': False, 'error':form.errors.as_json()})
         else:
             return JsonResponse({'success':False, 'message':"Méthode non autorisée !"})
     else:
-        return JsonResponse({'success':False,'message':"Méthode non autorisée"})
+        return JsonResponse({'success':False,'message':"Cette chambre à déjà été reservé !"})
             
 
 def rechercher(request):
