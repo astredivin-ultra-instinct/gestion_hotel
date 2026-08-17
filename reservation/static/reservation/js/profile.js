@@ -66,8 +66,7 @@ async function add_chambre() {
     }
 }
 // Ajout de chambre
-const doc = document.querySelector('#form');
-console.log("le document est :", doc);
+//const doc = document.querySelector('#form');
 document.querySelector('#form').addEventListener('submit',
     async function(e) {
         e.preventDefault();
@@ -108,15 +107,19 @@ function affichageChambre() {
         data.forEach(c => {
             const chambreCard = document.createElement('div');
             chambreCard.className = 'chambre-card';
+            //const date = new Date();
+           // console.log("jour:",date);
             chambreCard.innerHTML = `
-                         <h3>Hôtel : ${c.hotel} </h3>
+                         <h3>Hôtel : ${c.hotel}</div> <button class="opt" onclick="Option(${c.id})">+++</button></h3>
                          <img src="${c.photo}" alt="Image de chambres" >
                          <p><strong>Numéro de chambre:</strong>${c.numero}</p>
                          <p><strong>Etage :</strong>${c.etage}</p>
-                         <p><strong>Tarifs:</strong>${c.prix_heure} / heure | ${c.prix_jour} / jour | ${c.prix_mois} / mois </p>
+                         <p><strong>Tarifs:</strong>${c.prix_heure} fcfa /heure | ${c.prix_jour} fcfa/jour | ${c.prix_mois}fcfa /mois </p>
+                         <p><strong>Téléphone :</strong>+266 ${c.tel} </p>
+                         <a href="${c.email}" ><strong>📩ADDRESS E-mail📩: </strong>${c.email}</a> <br>
+                         <a href="${c.localisation}" ><strong>📍${c.ville} secteur ${c.secteur}📍<br>Cliquer ici pour voir la localisation :</strong>  💎${c.hotel}💎</a>
                          <button class="btn" onclick="reserverChambre(${c.id})">Reserver</button>
-                         <hr> 
-                         `;
+                         ` ;
             // ajout de la carte chambre dans le conteneur principal
             contenu.appendChild(chambreCard);
 
@@ -158,3 +161,72 @@ document.querySelector('#Rform').addEventListener('submit',
         }
     }
 );
+
+//options (modifier//supprimer)
+
+function Option(id){
+    chambreId = id;
+    document.getElementById('acceuil').style.display= 'none';
+    document.getElementById('option').style.display = 'block';
+    
+}
+// supprimer
+function Supprimer(){
+    document.querySelector('.supp').addEventListener("click",
+    async function(e) {
+        e.preventDefault();
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const rep = await fetch(`/supprimer_chambre/${chambreId}`,{
+            method: 'POST',
+            headers :{
+                'X-CSRFToken': csrftoken
+            }
+        });
+        if (rep.success){
+            Message(rep.message, 'success');
+            console.log(rep.success);
+            window.location.href = rep.redirect_url;
+        } else {
+            Message(rep.message);
+            console.log(rep.message);
+            console.log(rep.error);
+            return;
+        }
+    }
+)
+}
+
+//Modifier
+//document.querySelector('#Oform').addEventListener()
+
+//Rechercher
+
+function Rechercher() {
+    const find = document.querySelector('.rechercher').value;
+    fetch(`/recherche/?q=${encodeURIComponent(find)}`)
+    .then(rep => rep.json())
+    .then(hotel =>{
+        const contenu = document.getElementById('contenu_recherche');
+        document.getElementById('acceuil').style.display = 'none';
+        contenu.innerHTML = '';
+        contenu.style.display = 'block';
+        hotel.forEach(h =>{
+            const hotel_trouve = document.createElement('div');
+            hotel_trouve.className = 'rech_ok';
+            hotel_trouve.innerHTML = `
+                        <h3>Hôtel:${h.nom} </h3>
+                        <img src="${h.photo}" alt="images">
+                        <p><strong>Ville:</strong>${h.ville} secteur ${h.secteur} </p>
+                        <p><strong>Téléphone:</strong>+226 ${h.tel} </p>
+                        <a href="${h.localisation}">Cliquer ici pour voir la localisation de l'hôtel: ${h.nom}</a> <br>
+                        <a href="${h.email}">ADDRESSE E-mail: ${h.email}</a>
+
+                        
+
+            `;
+            contenu.appendChild(hotel_trouve);
+        });
+
+    })
+    .catch(error => console.error("Erreur lors du chargement des données:", error))
+}

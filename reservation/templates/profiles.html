@@ -18,12 +18,14 @@
             align-items: center;
             height: auto;
             min-height: 100vh;
-            overflow: hidden;
+            overflow: auto;
+            background-color: rgb(16, 20, 68);
+            color: white;
 
         }
         .app-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 450px;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -54,6 +56,7 @@
             z-index: 10;
             display: flex;
             background-color:rgb(49, 48, 48);
+            background-attachment: fixed;
         }
         .add {
             position: absolute;
@@ -69,7 +72,7 @@
             transition: transform 0.2s;
             box-shadow: 0 4px 6px rgb(0,0,0,0.2);
             cursor: pointer;
-            background-color: green;
+            background-color: rgb(10, 119, 245);
         }
         .add:hover{
             background-color: rgb(35, 71, 35);
@@ -79,14 +82,14 @@
         }
         .btn {
             width: 100%;
-            background-color: green;
-            border: 1px solid white;
+            background-color: rgb(8, 126, 237);
+            border: 1px solid rgb(8, 126, 237);
             border-radius: 14px;
             padding: 10px 15px;
             margin-top: 10px;
         }
         .btn:hover{
-            background-color: rgb(37, 80, 37);
+            background-color: rgb(19, 79, 113);
         }
         .btn:active {
             transform: scale(1.1);
@@ -122,20 +125,45 @@
             text-align: center;
             justify-content: center;
         }
+        .rechercher{
+            font-size: 15px;
+            background-color: rgba(247, 244, 244, 0.978);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            text-align: center;
+            justify-content: center;
+            border: 2px solid rgb(12, 12, 118);
+            border-radius: 15px;
+            width: 75%;
+            padding: 14px 14px;
+            margin-top: 15px;
+
+        }
+        .rechercher:focus {
+            border-color: rgb(0, 145, 255);
+            outline: none;
+            box-shadow: 1px 0 1px rgb(26, 143, 233);
+        }   
         h2 {
             font-size: 15px;
-            color: rgb(14, 120, 29);
-            background-color: rgb(222, 222, 222, 0.3);
+            color: rgb(12, 19, 221);
+            background-color: rgba(247, 244, 244, 0.978);
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
             justify-content: center;
             border: 1px solid black;
-            border-color: green;
+            border-color: rgb(49, 0, 128);
             border-radius: 15px;
             width: 100%;
             padding: 14px 14px;
 
+        }
+        h3 {
+            background-color: rgb(248, 249, 233);
+            width: 100%;
+            padding: 17px 15px;
+            color: black;
+            margin-top: 10px;
         }
         .head {
             background-color: white;
@@ -158,8 +186,8 @@
         }
         .dec {
             font-size: 15px;
-            color: rgb(20, 13, 13);
-            background-color: rgb(222, 222, 222, 0.3);
+            color: rgb(22, 18, 246);
+            background-color: white;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -194,9 +222,36 @@
             align-items: center;
             justify-content: center;
             display: block;
+            width: 150%;
+            max-width: 450px;
+            padding: auto,  
+         }
+        
+        img {
             width: 100%;
-            max-width: 400px;
-            padding: auto,        }
+        }
+        a {
+         text-decoration: none;
+         color: rgb(17, 155, 253);
+        }
+        .posteur { 
+            width: 100%;
+            max-width: 450px;
+        }
+        .opt {
+            margin-left: 240px; 
+            background-color: white;
+            border-color: rgb(8, 91, 236);
+        }
+        .rech {
+            color: blue;
+            text-decoration: none;
+            width: 24%;
+            border-radius: 13px;
+            padding: 13px 14px;
+            border-color: rgb(247, 247, 247);
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -208,8 +263,16 @@
             <button onclick="afficherPage('profil')" class="head" title="mon profile">👤</button>
         </header>
         <div class ="main">
+
             <div id="acceuil" class="page" >
                 <h2>La plateforme de reservation d'hotel</h2>
+                <div class="recherche">
+                    <input class="rechercher" type="text" name="q" value="{{query}}" placeholder="Rechercher un hotel 🔍">
+                    <button onclick="Rechercher()" class="rech">Rechercher</button>
+                    <div id="contenu_recherche">
+
+                    </div>
+                </div>
                 <div class="acceuil-contenaire">
                     <div class="posteur">
                         <div class="contenu">
@@ -287,7 +350,21 @@
                         <label for="temps" class="label-r">Temps</label>
                         <input type="number" id="temps" placeholder="nombre de jour/heure/mois">
                     </div>
-                    <button type="submit" class="btn">Valider</button>
+                    <button type="submit" class="btn">Passer au paiement</button>
+                </div>
+            </form>
+            <div id="option" class="page" style="display: none;">
+                <div class="mod">
+                    <button onclick="afficherPage('modifier')" class="modifier">Modifier</button>
+                </div> 
+                <div class="supp">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
+                    <button onclick="Supprimer()" class="supprimer">Supprimer</button>
+                </div>
+            </div>
+            <form action="" id="Mod_form">
+                <div id="modifier">
+                         
                 </div>
             </form>
         </div>

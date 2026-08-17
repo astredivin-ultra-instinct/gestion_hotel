@@ -27,13 +27,14 @@ urlpatterns = [
     path('deconnexion/', views.deconnexion, name='deconnexion'),
     path('ajouter_chambre/', views.add_chambre, name='add_chambre'),
     path('modifier_chambre/', views.mod_chambre, name='mod_chambre'),
-    path('supprimer_chambre/', views.supp_chambre, name='supp_chambre'),
+    path('supprimer_chambre/<int:k>', views.supp_chambre, name='supp_chambre'),
     path('reservation/<int:k>', views.reserver_chambre, name='reserver_chambre'),
-    path('', views.acceuil, name='acceuil'),
+    path('acceuil', views.acceuil, name='acceuil'),
     path('login/', views.logine, name='login'),
     path('recherche/', views.rechercher, name="rechercher"),
     path('affichage/', views.affichage, name='affichage'),
-    path('profiles/', views.profiles, name='profiles')
+    path('profiles/', views.profiles, name='profiles'),
+    path('', views.profiles, name='profiles')
 
 ]
 

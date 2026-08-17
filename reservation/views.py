@@ -28,6 +28,11 @@ def affichage(request):
             'prix_jour' : c.prix_jour,
             'prix_mois' : c.prix_mois,
             'hotel' : c.hotel.nom,
+            'localisation': c.hotel.localisation,
+            'tel': c.hotel.tel,
+            'email': c.hotel.email,
+            'ville': c.hotel.ville,
+            'secteur': c.hotel.secteur,
         })
     return JsonResponse(data, safe = False)
 
@@ -94,9 +99,15 @@ def add_chambre(request):
 @login_required
 def supp_chambre(request, k):
     chambre = get_object_or_404(Chambre,id = k,user=request.user)
-    chambre.delete()
-    return redirect('acceuil(request):')
-
+    if request.method == 'POST':
+        chambre.delete()
+        chambre.refresh_from_db()
+        if not chambre:
+            return JsonResponse({'success':True, 'message':"Supprimé avec succès", 'redirect_url': reverse('profiles')})
+        else :
+            return JsonResponse({'success':False, 'message':"Une erreur est survenue lors de suppression veuillez reessayer plutard!"})
+    else:
+        return JsonResponse({'success':False, 'error':"Methode non autorisé"})
 @login_required
 def mod_chambre(request, k):
     chambre = get_object_or_404(Chambre, id=k, user=request.user)
@@ -104,7 +115,7 @@ def mod_chambre(request, k):
         form = ChambreForm(data, instance=chambre)
         if form.is_valid():
             form.save()
-            return redirect('acceuil(request):')
+            return JsonResponse({'success':True, 'message': "Modifier avec succèss",'redirect_url': reverse("acceuil")})
         else:
             return JsonResponse({'success':False,'error':form.error})
     else:
@@ -145,10 +156,13 @@ def reserver_chambre(request, k):
 def rechercher(request):
     query = request.GET.get('q', '')
     if query:
-        data = json.loads(request.body)
-        data = Hotel.objects.filter(
+        #data = json.loads(request.body)
+        hotels = Hotel.objects.filter(
             Q(nom__icontains=query)
         )
+        data = list(hotels.values('nom','ville','localisation','secteur','photo','tel','email'))
+    else:
+        data = []
     return JsonResponse(data, safe=False)
 
 def acceuil(request):
