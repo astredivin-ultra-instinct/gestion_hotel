@@ -14,6 +14,21 @@ from .forms import CompteForm, ChambreForm, ReservationForm
 
 # Create your views here.
 
+@login_required
+def profil(request):
+    p = Hotel.objects.get(user = request.user)
+    data = {
+            'id': p.id,
+            'nom': p.nom,
+            'ville': p.ville,
+            'secteur': p.secteur,
+            'localisation': p.localisation,
+            'tel': p.tel,
+            'email': p.email,
+            'photo': p.photo.url if p.photo else ''
+        }
+    return JsonResponse(data, safe=False)
+
 def affichage(request):
     #data = json.loads(request.body)
     chambres = Chambre.objects.all()
@@ -157,11 +172,18 @@ def rechercher(request):
     query = request.GET.get('q', '')
     if query:
         #data = json.loads(request.body)
-        hotels = Hotel.objects.filter(
-            Q(nom__icontains=query)
+        hotel = Chambre.objects.all()
+        nom = hotel.nom
+        ville = hotel.ville
+        secteur = hotel.secteur
+        hotels = Chambre.objects.filter(
+            Q(nom__icontains=query) |
+            Q(ville__icontains=query) | Q(secteur__icontains=query)
         )
         data = list(hotels.values('nom','ville','localisation','secteur','photo','tel','email'))
+        print("hôtel trouvé")
     else:
+        print("aucun hôtel trouvé")
         data = []
     return JsonResponse(data, safe=False)
 

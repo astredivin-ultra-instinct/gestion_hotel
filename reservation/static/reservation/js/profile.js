@@ -110,7 +110,7 @@ function affichageChambre() {
             //const date = new Date();
            // console.log("jour:",date);
             chambreCard.innerHTML = `
-                         <h3>Hôtel : ${c.hotel}</div> <button class="opt" onclick="Option(${c.id})">+++</button></h3>
+                         <div class="tete"><h3>Hôtel : ${c.hotel}</div> <button class="opt" onclick="Option(${c.id})">☰</button></h3></div>
                          <img src="${c.photo}" alt="Image de chambres" >
                          <p><strong>Numéro de chambre:</strong>${c.numero}</p>
                          <p><strong>Etage :</strong>${c.etage}</p>
@@ -219,7 +219,8 @@ function Rechercher() {
                         <p><strong>Ville:</strong>${h.ville} secteur ${h.secteur} </p>
                         <p><strong>Téléphone:</strong>+226 ${h.tel} </p>
                         <a href="${h.localisation}">Cliquer ici pour voir la localisation de l'hôtel: ${h.nom}</a> <br>
-                        <a href="${h.email}">ADDRESSE E-mail: ${h.email}</a>
+                        <a href="${h.email}">ADRESSE E-mail: ${h.email}</a>
+                        <button class="btn" onclick="reserverChambre(${h.i})">Réserver</button>
 
                         
 
@@ -230,3 +231,30 @@ function Rechercher() {
     })
     .catch(error => console.error("Erreur lors du chargement des données:", error))
 }
+
+//Profil
+function profil() {
+fetch('/profil/')
+.then(rep =>rep.json())
+.then(data => {
+    console.log("donnéez json reçus:",data)
+    const contenu = document.getElementById('profil');
+    contenu.innerHTML = '';
+   // contenu.style.display = 'block';
+    const contenair = document.createElement('div');
+    contenair.className = 'pro';
+    contenair.innerHTML = `
+               <h3><strong>${data.nom} </strong></h3>
+               <img src="${data.photo}" alt="photo de profile" >
+               <p>${data.ville} secteur ${data.secteur} </p>
+               <p>Téléphone: ${data.tel}</p>
+               <p>ADDRESS E-mail :${data.email}</p>
+               <a href="${data.localisation}">localisation</a>
+
+    `;
+    contenu.appendChild(contenair);
+})
+.catch(error => console.error("Erreur los du chargement des données !", error))
+}
+
+document.addEventListener('DOMContentLoaded', profil)

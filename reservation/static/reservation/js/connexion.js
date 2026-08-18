@@ -21,8 +21,8 @@ function message(texte, type) {
         msg.style.borderColor = 'rgb(19, 108, 19)'
     } else {
         msg.style.color = 'rgba(241, 15, 15, 0.92)';
-        msg.style.backgroundColor = 'rgba(200, 146, 146, 0.91)';
-        msg.style.borderColor = 'rgb(225, 20, 20)'
+        msg.style.backgroundColor = 'rgba(237, 233, 233, 0.91)';
+        msg.style.borderColor = 'rgb(253, 21, 21)'
     }
     setTimeout( () => {
         msg.style.display = 'none';

@@ -34,7 +34,8 @@ urlpatterns = [
     path('recherche/', views.rechercher, name="rechercher"),
     path('affichage/', views.affichage, name='affichage'),
     path('profiles/', views.profiles, name='profiles'),
-    path('', views.profiles, name='profiles')
+    path('', views.profiles, name='profiles'),
+    path('profil/', views.profil, name = 'profil')
 
 ]
 
