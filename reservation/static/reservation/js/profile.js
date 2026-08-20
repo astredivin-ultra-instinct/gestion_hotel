@@ -110,13 +110,12 @@ function affichageChambre() {
             //const date = new Date();
            // console.log("jour:",date);
             chambreCard.innerHTML = `
-                         <div class="tete"><h3>Hôtel : ${c.hotel}</div> <button class="opt" onclick="Option(${c.id})">☰</button></h3></div>
+                         <div class="tete"><h3>Hôtel : ${c.hotel}</h3> <button class="opt" onclick="Option(${c.id})">☰</button></div>
                          <img src="${c.photo}" alt="Image de chambres" >
                          <p><strong>Numéro de chambre:</strong>${c.numero}</p>
                          <p><strong>Etage :</strong>${c.etage}</p>
                          <p><strong>Tarifs:</strong>${c.prix_heure} fcfa /heure | ${c.prix_jour} fcfa/jour | ${c.prix_mois}fcfa /mois </p>
                          <p><strong>Téléphone :</strong>+266 ${c.tel} </p>
-                         <a href="${c.email}" ><strong>📩ADDRESS E-mail📩: </strong>${c.email}</a> <br>
                          <a href="${c.localisation}" ><strong>📍${c.ville} secteur ${c.secteur}📍<br>Cliquer ici pour voir la localisation :</strong>  💎${c.hotel}💎</a>
                          <button class="btn" onclick="reserverChambre(${c.id})">Reserver</button>
                          ` ;
@@ -197,15 +196,69 @@ function Supprimer(){
 }
 
 //Modifier
+async function ModChambre(){
+    const d = document.getElementById('Mod_form');
+    const data = new FormData(d);
+    const rep = await sendReq(`/modifier_chambre/${chambreId}`, data);
+    if (rep.success){
+        Message(rep.message, 'success');
+        document.getElementById('Mod_form').reset();
+        window.location.href = '/profiles/';
+    } else {
+        Message(rep.message, 'error');
+        console.log(rep.error);
+        return;
+    }
+}
+function ModifierChambre() {
+document.querySelector('#Mod_form').addEventListener("submit",
+    async function(e) {
+        e.preventDefault();
+        await ModChambre();
+    }
+)
+}
+//annulé modification
+document.querySelector('.annule').addEventListener('click', 
+    async function(e) {
+        e.preventDefault();
+        document.getElementById('Mod_form').reset();
+        window.location.href = '/profiles/';
+    }
+)
+
+
+
 //document.querySelector('#Oform').addEventListener()
 
 //Rechercher
 
 function Rechercher() {
     const find = document.querySelector('.rechercher').value;
+    if (find === '') {
+        console.log("Aucun élément saisi");
+        const msg = document.querySelector('.rechercher');
+        msg.placeholder = "Veuillez entrez un élement à rechercher!";
+        //Message("Veuillez entrez un élement à rechercher!", 'error');
+        return;
+    }
     fetch(`/recherche/?q=${encodeURIComponent(find)}`)
     .then(rep => rep.json())
     .then(hotel =>{
+        console.log(hotel.success === false)
+        if (hotel.success === false){
+            const contenu = document.getElementById('contenu_recherche');
+            document.getElementById('acceuil').style.display = 'none';
+            const hotel_trouve = document.createElement('div');
+            contenu.style.display = 'block';
+            contenu.innerHTML = '';
+            hotel_trouve.innerHTML = `
+            <h5>Aucun hotel correspond à cette recherche</h5>
+            `;
+            contenu.appendChild(hotel_trouve);
+            document.querySelector('.rechercher').value = '';
+            return;
+        }
         const contenu = document.getElementById('contenu_recherche');
         document.getElementById('acceuil').style.display = 'none';
         contenu.innerHTML = '';
@@ -216,14 +269,11 @@ function Rechercher() {
             hotel_trouve.innerHTML = `
                         <h3>Hôtel:${h.nom} </h3>
                         <img src="${h.photo}" alt="images">
+                        <p><strong>Tarifs:</strong>${h.prix_heure} fcfa/heure ${h.prix_jour} fcfa/jour ${h.prix_mois} fcfa/mois</p>
                         <p><strong>Ville:</strong>${h.ville} secteur ${h.secteur} </p>
                         <p><strong>Téléphone:</strong>+226 ${h.tel} </p>
                         <a href="${h.localisation}">Cliquer ici pour voir la localisation de l'hôtel: ${h.nom}</a> <br>
-                        <a href="${h.email}">ADRESSE E-mail: ${h.email}</a>
-                        <button class="btn" onclick="reserverChambre(${h.i})">Réserver</button>
-
-                        
-
+                        <button class="btn" onclick="reserverChambre(${h.id})">Réserver</button>          
             `;
             contenu.appendChild(hotel_trouve);
         });
@@ -247,9 +297,9 @@ fetch('/profil/')
                <h3><strong>${data.nom} </strong></h3>
                <img src="${data.photo}" alt="photo de profile" >
                <p>${data.ville} secteur ${data.secteur} </p>
-               <p>Téléphone: ${data.tel}</p>
-               <p>ADDRESS E-mail :${data.email}</p>
-               <a href="${data.localisation}">localisation</a>
+               <p>Téléphone:+226 ${data.tel}</p>
+               <p>Address E-mail :${data.email}</p>
+               <a href="${data.localisation}">localisation de votre hôtel</a>
 
     `;
     contenu.appendChild(contenair);
@@ -258,3 +308,18 @@ fetch('/profil/')
 }
 
 document.addEventListener('DOMContentLoaded', profil)
+
+//style css
+
+const btn = document.querySelectorAll('.head');
+
+btn.forEach(bt =>{
+    bt.addEventListener('click',
+        function() {
+            btn.forEach(b =>{
+                b.classList.remove('active')
+            });
+            this.classList.add('active')
+        }
+    );
+})

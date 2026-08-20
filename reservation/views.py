@@ -127,14 +127,14 @@ def supp_chambre(request, k):
 def mod_chambre(request, k):
     chambre = get_object_or_404(Chambre, id=k, user=request.user)
     if request.method == 'POST':
-        form = ChambreForm(data, instance=chambre)
+        form = ChambreForm(request.POST,request.FILES, instance=chambre)
         if form.is_valid():
             form.save()
             return JsonResponse({'success':True, 'message': "Modifier avec succèss",'redirect_url': reverse("acceuil")})
         else:
-            return JsonResponse({'success':False,'error':form.error})
+            return JsonResponse({'success':False,'error':forms.error})
     else:
-        return JsonResponse({'success':False,'message':"Méthode non autorisée"})
+        ChambreForm(instance=chambre)
 
 def reserver_chambre(request, k):
     chambre = get_object_or_404(Chambre, id=k)
@@ -172,15 +172,38 @@ def rechercher(request):
     query = request.GET.get('q', '')
     if query:
         #data = json.loads(request.body)
-        hotel = Chambre.objects.all()
-        nom = hotel.nom
-        ville = hotel.ville
-        secteur = hotel.secteur
+        mots = query.split()
+        filtre = Q()
+        for m in mots:
+            m_filtrer = (
+                Q(hotel__nom__icontains=m) |
+                Q(hotel__ville__icontains=m) |
+                Q(hotel__secteur__icontains=m)
+
+            )
+            filtre &= m_filtrer
         hotels = Chambre.objects.filter(
-            Q(nom__icontains=query) |
-            Q(ville__icontains=query) | Q(secteur__icontains=query)
+            filtre
         )
-        data = list(hotels.values('nom','ville','localisation','secteur','photo','tel','email'))
+        if not hotels :
+            return JsonResponse({'success':False,'message':"Aucun hotel trouvé !"})
+        #data = list(hotels.values('hotel','numero','etage','prix_jour','prix_heure','prix_mois','nombre','photo','commentaire'))#('nom','ville','localisation','secteur','photo','tel','email'))
+        data = []
+        for c in hotels:
+            data.append({
+                'id': c.id,
+                'ville': c.hotel.ville,
+                'localisation': c.hotel.localisation,
+                'secteur': c.hotel.secteur,
+                'nom': c.hotel.nom,
+                'tel': c.hotel.tel,
+                'numero': c.numero,
+                'etage': c.etage,
+                'prix_heure': c.prix_heure,
+                'prix_jour': c.prix_jour,
+                'prix_mois': c.prix_mois,
+                'photo': c.photo.url if c.photo else ''
+            }) 
         print("hôtel trouvé")
     else:
         print("aucun hôtel trouvé")
