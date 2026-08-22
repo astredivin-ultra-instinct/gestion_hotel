@@ -30,12 +30,19 @@ function message(texte, type) {
 }
 
 async function soummette() {
+    const load = document.querySelector('.loadind');
+    if(load){
+        load.style.display = 'block';
+        document.getElementById('form').style.display = 'none';
+    }
     const d = document.getElementById('form');
     const data  = new FormData(d);
     //data.append('username', document.querySelector('#username').value);
     //data.append('password', document.querySelector('#password').value);
     const rep = await sendReq('/connexion/', data);
     if (rep.success) {
+        load.style.display = 'none';
+        document.getElementById('form').style.display = 'none';
         message(rep.message, 1);
         document.getElementById('form').reset();
         window.location.href = rep.redirect_url;

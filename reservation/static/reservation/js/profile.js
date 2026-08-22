@@ -235,7 +235,8 @@ document.querySelector('.annule').addEventListener('click',
 
 function Rechercher() {
     const find = document.querySelector('.rechercher').value;
-    if (find === '') {
+    console.log(find);
+    if (find === '' | find ===' ') {
         console.log("Aucun élément saisi");
         const msg = document.querySelector('.rechercher');
         msg.placeholder = "Veuillez entrez un élement à rechercher!";
@@ -251,6 +252,8 @@ function Rechercher() {
             document.getElementById('acceuil').style.display = 'none';
             const hotel_trouve = document.createElement('div');
             contenu.style.display = 'block';
+            document.getElementById('reservations').style.display ='none';
+            document.getElementById('profil').style.display ='none';
             contenu.innerHTML = '';
             hotel_trouve.innerHTML = `
             <h5>Aucun hotel correspond à cette recherche</h5>
@@ -287,7 +290,7 @@ function profil() {
 fetch('/profil/')
 .then(rep =>rep.json())
 .then(data => {
-    console.log("donnéez json reçus:",data)
+    //console.log("donnéez json reçus:",data)
     const contenu = document.getElementById('profil');
     contenu.innerHTML = '';
    // contenu.style.display = 'block';
@@ -323,3 +326,53 @@ btn.forEach(bt =>{
         }
     );
 })
+
+
+//List des reservations
+function Reservation() {
+    fetch('/reservations/')
+    .then(rep => rep.json())
+    .then(data =>{
+        console.log("data:",data)
+        const contenu = document.querySelector('.reservation_list');
+        contenu.innerHTML = '';
+        if(data.length === 0) {
+            contenu.style.display = "block";
+            contenu.innerHTML = `
+            <h5>Aucune reservations en cours</h5>
+            `;
+        }
+        //document.getElementById('acceuil').style.display= 'none';
+        //contenu.style.display ='block';
+        data.forEach(d => {
+            const list = document.createElement('div');
+            list.className = 'list';
+            list.innerHTML = `
+                  <h4><strong>Air + ${d.etage}: Chambre numero ${d.numero} </strong> </h4>
+                   <p>reservée par <strong>${d.nom} ${d.prenom} le ${d.date} </strong> </p>
+                   <p>Total payé :<strong>${d.total}fcfa pour ${d.temps} ${d.tarif} </strong></p>
+                    <p><strong>Téléphone: +226 ${d.tel}</strong></p>
+                    <hr>
+                    <hr>
+        `;
+        contenu.appendChild(list);
+        });
+    })
+    .catch(error =>console.error("erreurs lors du chargement des données!", error))
+}
+
+document.addEventListener('DOMContentLoaded', Reservation);
+
+
+            /* Date et heure actu
+            const dt = new Date();
+            const jour = dt.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            const heure = dt.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });*/

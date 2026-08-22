@@ -112,11 +112,23 @@
         label,span {
             color: white;
         }
+        .loading {
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background-color: rgb(23, 52, 127);
+            color: white;
+        }
     </style>
 </head>
 </body>
 <script src="{% static 'reservation/js/connexion.js' %}" defer></script>
 <div class="cadre">
+    <div class="loadind" style="display: none;">
+        <div class="load">
+            Chargement ....
+        </div>
+    </div>
     <form action="" method="post" id="form">
         {% csrf_token %}
         <div class="container">

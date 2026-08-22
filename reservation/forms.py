@@ -24,7 +24,7 @@ class ChambreForm(forms.ModelForm):
 class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
-        fields = ['nom','prenom','tel','temps']
+        fields = ['nom','prenom','tel','temps','tarif']
 
 
 

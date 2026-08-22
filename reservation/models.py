@@ -32,6 +32,7 @@ class Reservation(models.Model):
     prenom = models.CharField(max_length=40)
     tel = models.IntegerField()
     temps = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
     TARIF = (
         ('jour', 'par jour'),
         ('heure', 'par heure'),

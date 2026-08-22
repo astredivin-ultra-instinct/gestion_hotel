@@ -166,7 +166,29 @@ def reserver_chambre(request, k):
             return JsonResponse({'success':False, 'message':"Méthode non autorisée !"})
     else:
         return JsonResponse({'success':False,'message':"Cette chambre à déjà été reservé !"})
-            
+
+@login_required
+def reservation(request):
+    hotel = Hotel.objects.get(user = request.user)
+    reservation = Reservation.objects.filter(chambre__hotel = hotel)
+    data = []
+    for r in reservation:
+        data.append({
+        'id': r.id,
+        'nom': r.nom,
+        'prenom': r.prenom,
+        'tel': r.tel,
+        'temps': r.temps,
+        'total': r.total,
+        'numero': r.chambre.numero,
+        'etage': r.chambre.etage,
+        'tarif': r.tarif,
+        'date': r.date.strftime('%d/%m/%Y à %Hh%M')
+    })
+    return JsonResponse(data, safe=False)
+
+
+
 
 def rechercher(request):
     query = request.GET.get('q', '')
@@ -224,4 +246,3 @@ def deconnexion(request):
     else:
         return JsonResponse({'success':False, 'message':"Méthode non autorisée!"})
 
-    

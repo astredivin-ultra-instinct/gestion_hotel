@@ -182,9 +182,10 @@
             color: rgb(250, 248, 248);
         }
         .rechercher:focus {
-            border-color: rgb(255, 0, 0);
+            border-color: rgb(0, 157, 255);
             outline: none;
-            box-shadow: 0 0 10px rgb(233, 26, 26);
+            border: 2px solid aqua;
+            box-shadow: 0 0 10px rgb(8, 219, 242);
         }
         .rechercher input::placeholder {
             font-size: italic;
@@ -217,6 +218,7 @@
             background-color: transparent;
             border-radius: 12px;
             cursor: pointer;
+            color: white;
             
         } 
         .head:active {
@@ -235,7 +237,7 @@
             justify-content: center;
             /*border: 1px solid rgb(229, 24, 24);*/
             border-radius: 13px;
-            margin-top: 10px;
+            margin-top: 80px;
         }
         .dec {
             font-size: 15px;
@@ -354,6 +356,28 @@
             justify-content: center;
             color: gray;
         }
+        h4 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(14, 22, 174);
+            background-color: white;
+            border: 1px solid aqua;
+            width: 100%;
+            height: 35px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        .list {
+            background-color: rgb(224, 218, 218);
+            display: ruby-base;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 15px;
+            font-size: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -364,7 +388,7 @@
 
         <header>
             <div class="nome">
-                <h2 class="titre">MY RESERVA HOTEL</h2>
+                <!--h2 class="titre">MY RESERVA HOTEL</h2-->
             </div>
             <div class="recherche">
                 <input class="rechercher" type="text" name="q" value="{{query}}" placeholder="Rechercher un hotel... 🔍">
@@ -372,7 +396,8 @@
             </div>
             <div class="nav">
                 <button onclick="afficherPage('para')" class="head" title="paramètres">⚙️</button>
-                <button onclick="afficherPage('acceuil')" class="head active" title="acceuil principal">Acceuil</button>
+                <button onclick="afficherPage('acceuil')" class="head active" title="acceuil principal">Accueil</button>
+                <button onclick="afficherPage('reservations')" class="head" title="reservation des clients">Réservations</button>
                 <button onclick="afficherPage('profil')" class="head" title="mon profile">👤</button>
             </div>
         </header>
@@ -391,6 +416,11 @@
             </div>
             <div id="message">
 
+            </div>
+            <div id="reservations" style="display: none;" class="page">
+                <div class="reservation_list">
+
+                </div>
             </div>
 
             <div id="para" class="page" style="display: none;" >
