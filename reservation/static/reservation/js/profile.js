@@ -112,11 +112,14 @@ function affichageChambre() {
             chambreCard.innerHTML = `
                          <div class="tete"><h3>Hôtel : ${c.hotel}</h3> <button class="opt" onclick="Option(${c.id})">☰</button></div>
                          <img src="${c.photo}" alt="Image de chambres" >
-                         <p><strong>Numéro de chambre:</strong>${c.numero}</p>
-                         <p><strong>Etage :</strong>${c.etage}</p>
-                         <p><strong>Tarifs:</strong>${c.prix_heure} fcfa /heure | ${c.prix_jour} fcfa/jour | ${c.prix_mois}fcfa /mois </p>
-                         <p><strong>Téléphone :</strong>+266 ${c.tel} </p>
-                         <a href="${c.localisation}" ><strong>📍${c.ville} secteur ${c.secteur}📍<br>Cliquer ici pour voir la localisation :</strong>  💎${c.hotel}💎</a>
+                         <p><strong>Numéro de chambre: </strong>${c.numero}</p>
+                         <p><strong>Etage : </strong>${c.etage}</p> <br>
+                         <p><strong>Tarifs:</strong><div class="tarif"> <br>
+                         <div class="heure">${c.prix_heure} Fcfa/Heure</div> <br>
+                         <div class="jour">${c.prix_jour} Fcfa/jour</div> <br>
+                         <div class="mois"> ${c.prix_mois} Fcfa/mois</div></div></p>  <br>                       
+                         <p><strong>Téléphone : </strong>+266 ${c.tel} </p>
+                         <a href="${c.localisation}" ><strong>📍${c.ville} secteur ${c.secteur}📍<br>Cliquer ici pour voir la localisation :</strong> ${c.hotel}</a>
                          <button class="btn" onclick="reserverChambre(${c.id})">Reserver</button>
                          ` ;
             // ajout de la carte chambre dans le conteneur principal
@@ -272,7 +275,10 @@ function Rechercher() {
             hotel_trouve.innerHTML = `
                         <h3>Hôtel:${h.nom} </h3>
                         <img src="${h.photo}" alt="images">
-                        <p><strong>Tarifs:</strong>${h.prix_heure} fcfa/heure ${h.prix_jour} fcfa/jour ${h.prix_mois} fcfa/mois</p>
+                        <p><strong>Tarifs:</strong><div class="tarif">
+                        <div class="heure">${h.prix_heure} Fcfa/Heure</div>
+                        <div class="jour">${h.prix_jour} Fcfa/jour</div> 
+                        <div class="mois"> ${h.prix_mois} Fcfa/mois</div></div></p>
                         <p><strong>Ville:</strong>${h.ville} secteur ${h.secteur} </p>
                         <p><strong>Téléphone:</strong>+226 ${h.tel} </p>
                         <a href="${h.localisation}">Cliquer ici pour voir la localisation de l'hôtel: ${h.nom}</a> <br>
@@ -297,7 +303,7 @@ fetch('/profil/')
     const contenair = document.createElement('div');
     contenair.className = 'pro';
     contenair.innerHTML = `
-               <h3><strong>${data.nom} </strong></h3>
+               <h3 class="prof"><strong>${data.nom} </strong></h3>
                <img src="${data.photo}" alt="photo de profile" >
                <p>${data.ville} secteur ${data.secteur} </p>
                <p>Téléphone:+226 ${data.tel}</p>
@@ -350,7 +356,7 @@ function Reservation() {
             list.innerHTML = `
                   <h4><strong>Air + ${d.etage}: Chambre numero ${d.numero} </strong> </h4>
                    <p>reservée par <strong>${d.nom} ${d.prenom} le ${d.date} </strong> </p>
-                   <p>Total payé :<strong>${d.total}fcfa pour ${d.temps} ${d.tarif} </strong></p>
+                   <p>Total payé :<strong>${d.total}Fcfa pour ${d.temps} ${d.tarif} </strong></p>
                     <p><strong>Téléphone: +226 ${d.tel}</strong></p>
                     <hr>
                     <hr>
@@ -376,3 +382,83 @@ document.addEventListener('DOMContentLoaded', Reservation);
                 hour: '2-digit',
                 minute: '2-digit'
             });*/
+
+//photo
+
+const photoInput = document.getElementById("photo");
+const previewContainer = document.getElementById("previewContainer");
+const photoCount = document.getElementById("photoCount");
+
+let selectedFiles = [];
+
+photoInput.addEventListener("change", function () {
+
+    const newFiles = Array.from(this.files);
+
+    // Ajouter les nouvelles images
+    newFiles.forEach(file => {
+
+        if (!file.type.startsWith("image/")) {
+            return;
+        }
+
+        // Éviter les doublons
+        const alreadyExists = selectedFiles.some(
+            existingFile =>
+                existingFile.name === file.name &&
+                existingFile.size === file.size
+        );
+
+        if (!alreadyExists && selectedFiles.length < 5) {
+            selectedFiles.push(file);
+        }
+    });
+
+    updatePreview();
+
+    // Réinitialiser le champ pour pouvoir
+    // sélectionner à nouveau les mêmes images
+    this.value = "";
+});
+
+
+function updatePreview() {
+
+    previewContainer.innerHTML = "";
+
+    selectedFiles.forEach((file, index) => {
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+
+            const preview = document.createElement("div");
+            preview.classList.add("preview-item");
+
+            preview.innerHTML = `
+                <img src="${event.target.result}" alt="Image">
+
+                <button
+                    type="button"
+                    class="remove-photo"
+                    onclick="removePhoto(${index})">
+                    <i class="fa-solid fa-xmark"></i>
+                </button> `
+            ;
+
+            previewContainer.appendChild(preview);
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    photoCount.textContent = selectedFiles.length;
+}
+
+
+function removePhoto(index) {
+
+    selectedFiles.splice(index, 1);
+
+    updatePreview();
+}

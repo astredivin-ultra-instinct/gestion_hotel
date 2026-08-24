@@ -42,11 +42,14 @@ async function soummette() {
     const rep = await sendReq('/connexion/', data);
     if (rep.success) {
         load.style.display = 'none';
-        document.getElementById('form').style.display = 'none';
+        //document.getElementById('form').style.display = 'none';
         message(rep.message, 1);
         document.getElementById('form').reset();
         window.location.href = rep.redirect_url;
     } else {
+        load.style.display ='none';
+        document.getElementById('form').style.display = 'block';
+        load.style.display ='none';
         message(rep.message, 0);
         console.log(rep.error);
         return;

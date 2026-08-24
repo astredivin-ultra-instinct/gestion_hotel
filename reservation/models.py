@@ -39,7 +39,7 @@ class Reservation(models.Model):
         ('mois', 'par mois'),
     )
     tarif = models.CharField(max_length=10, choices=TARIF, default ='jour')
-    total = models.DecimalField(max_digits=15,decimal_places=3)
+    total = models.DecimalField(max_digits=15,decimal_places=0)
     chambre = models.ForeignKey(Chambre, on_delete=models.CASCADE)
     #date_debut = models.DateTime()
     #date_fin = models.DateTime()

@@ -40,7 +40,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgb(28, 85, 120);
+            background-color:rgb(22, 51, 233);
             color: rgb(240, 241, 247);
             border-bottom: 1px solid;
             position: fixed;
@@ -66,7 +66,7 @@
             align-items: center;
             z-index: 10;
             display: flex;
-            background-color:rgb(28, 85, 120);
+            background-color:rgb(22, 51, 233);
             position: sticky;
             bottom: 0;
         }
@@ -84,7 +84,7 @@
             transition: transform 0.2s;
             box-shadow: 0 4px 6px rgb(0,0,0,0.2);
             cursor: pointer;
-            background-color: rgb(10, 119, 245);
+            background-color: rgb(250, 251, 255);
         }
         .add:hover{
             background-color: rgb(13, 91, 103);
@@ -94,14 +94,16 @@
         }
         .btn {
             width: 100%;
-            background-color: rgb(8, 126, 237);
+            background-color: rgb(22, 51, 233);
             border: transparent;
             border-radius: 24px;
             padding: 10px 15px;
             margin-top: 10px;
+            color: white;
+            cursor: pointer;
         }
         .btn:hover{
-            background-color: rgb(19, 79, 113);
+            background-color: rgb(15, 30, 123);
         }
         .btn:active {
             transform: scale(1.1);
@@ -126,6 +128,7 @@
             border: 2px solid rgb(137, 141, 142);
             border-radius: 13px;
         }
+
         #tarif{
             width: 100%;
             max-width: 450px;
@@ -147,6 +150,9 @@
             max-width: 450px;
             text-align: center;
             justify-content: center;
+            color: rgb(22, 51, 233);
+            font-size: 17px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
         .recherche {
             display: flex;
@@ -170,7 +176,7 @@
         }
         .rechercher{
             font-size: 15px;
-            background-color: transparent;
+            background-color: white;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             text-align: center;
             justify-content: center;
@@ -179,7 +185,7 @@
             width: 100%;
             padding: 14px 14px;
             margin-top: 15px;
-            color: rgb(250, 248, 248);
+            color: rgb(7, 28, 214);
         }
         .rechercher:focus {
             border-color: rgb(0, 157, 255);
@@ -208,7 +214,7 @@
         h3 {
             width: 100%;
             padding: 17px 15px;
-            color: rgb(6, 13, 217);
+            color: white;
             margin-top: 10px;
         }
         .head {
@@ -218,7 +224,7 @@
             background-color: transparent;
             border-radius: 12px;
             cursor: pointer;
-            color: white;
+            color: rgb(250, 248, 248);
             
         } 
         .head:active {
@@ -226,8 +232,8 @@
         }
  
         .head.active {
-            background-color: rgb(13, 240, 252);
-            color: rgb(24, 7, 7);
+            background-color: rgb(237, 237, 239);
+            color: black;
         }
         #message {
             width: 100%;
@@ -288,7 +294,7 @@
         }
         a {
          text-decoration: none;
-         color: rgb(17, 155, 253);
+         color: rgb(22, 51, 233);
         }
         .posteur { 
             width: 100%;
@@ -296,14 +302,14 @@
         }
 
         .rech {
-            color: rgb(0, 208, 255);
+            color: rgb(245, 246, 246);
             width: 24%;
             margin-top: 15px;
             background-color: transparent;
             border: none;
             cursor: pointer;
         }
-        .rech:focus {
+        .rech:hover {
             text-decoration: blue;
             
         }
@@ -314,23 +320,24 @@
             width: 100%;
             gap: 15px;
             height: 55px;
-            background-color: rgb(129, 235, 235);
+            background-color: rgb(22, 51, 233);
         }
         .opt {
             background-color: transparent;
-            border-color: rgb(248, 249, 250);
             border: none; 
             font-size: 24px;
+            color: white;
             padding: 8px;
                }
         .opt:hover {
-            background-color: gray;
+            background-color: blue;
+            cursor: pointer;
         }
         #modifier, #form, .pro{
-            margin-top: 100px;
+            margin-top: 20px;
         }
         .add.active{
-            background-color: rgb(11, 74, 122);
+            background-color: rgb(22, 51, 233);
         }
         .page {
             margin-top: 70px;
@@ -362,7 +369,7 @@
             align-items: center;
             color: rgb(14, 22, 174);
             background-color: white;
-            border: 1px solid aqua;
+            border: 1px solid rgb(26, 59, 245);
             width: 100%;
             height: 35px;
             border-radius: 12px;
@@ -378,6 +385,206 @@
             font-size: 15px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .tarif {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .mois, .heure, .jour {
+            background-color: rgb(22, 51, 233);
+            border: 2px solid rgb(246, 246, 247);
+            border-radius: 10px;
+            width: 100%;
+            font-size: 20px;
+            color: white;
+            font-family: 'Times New Roman', Times, serif;
+            padding: 5px;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            cursor: pointer;
+            margin-right: 5px;
+
+        }
+        .prof {
+            background-color: rgb(22, 51, 233);
+        }
+        .c-photo {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+/* En-tête */
+.photo-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.photo-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 15px;
+    background: #eef4ff;
+    border: 1px solid #b9ceff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #1557d6;
+    font-size: 30px;
+}
+
+.photo-text {
+    flex: 1;
+}
+
+.photo-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.photo-subtitle {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+/* Compteur */
+.photo-count {
+    padding: 10px 18px;
+    border: 1px solid #d9dee8;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+}
+
+/* Zone d'ajout */
+.upload-zone {
+    min-height: 150px;
+    border: 2px dashed #8db2ff;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.upload-zone:hover {
+    background: #f7faff;
+    border-color: #1557d6;
+}
+
+.upload-plus {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+
+    background: #e8efff;
+    color: #1557d6;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+}
+
+.upload-text {
+    margin-top: 12px;
+    font-size: 16px;
+    color: #1f2937;
+    font-weight: 500;
+}
+
+/* Aperçus */
+.preview-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.preview-item {
+    position: relative;
+    height: 110px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-photo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-photo:hover {
+    background: #dc2626;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .photo-header {
+        align-items: flex-start;
+    }
+
+    .photo-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 23px;
+    }
+
+    .photo-title {
+        font-size: 17px;
+    }
+
+    .photo-subtitle {
+        font-size: 13px;
+    }
+
+    .photo-count {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .preview-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
     </style>
 </head>
 <body>
@@ -446,10 +653,6 @@
                         <label for="nombre" class="label-c">Nombre de chambre</label>
                         <input type="number" id="nombre" placeholder="1" required>
                     </div>
-                    <div class="c-photo">
-                        <label for="photo" class="label-c">Image/Photo</label>
-                        <input type="file" id="photo" placeholder="Images" required>
-                    </div>
                     <div class="c-prix_heure">
                         <label for="prix_heure" class="label-c">Prix par heure</label>
                         <input type="number" id="prix_heure" placeholder="prix/heure" required>
@@ -462,6 +665,34 @@
                         <label for="prix_mois" class="label-c">Prix par mois</label>
                         <input type="number" id="prix_mois" placeholder="prix/mois" required>
                     </div>
+                    <div class="c-photo">
+                        <div class="photo-header">
+                            <div class="photo-icon">
+                                📸
+                                <i class="fa-solid fa-images"></i>
+                            </div>
+                            <div class="photo-text">
+                                <div class="photo-title">Ajouter des images</div>
+                                <div class="photo-subtitle">
+                                    Ajouter entre 1 et 5 images
+                                </div>
+                            </div>
+                            <div class="photo-count">
+                                <span id="photoCount">0</span> / 5
+                            </div>
+                        </div>
+                        <label for="photo" class="upload-zone">
+                            <div class="upload-plus">
+                                🌄
+                                <i class="fa-solid fa-plus"></i>
+                            </div>
+                            <div class="upload-text">
+                                Ajouter une image
+                            </div>
+                        </label>
+                        <input type="file" id="photo" accept="image/*" multiple placeholder="Images" hidden required>
+                        <div id="previewContainer" class="preview-container"></div>
+                    </div>
                     <button class="btn" type="submit" title="ajouter une chambre">Ajouter</button>                
                 </div>
             </form>
@@ -470,8 +701,7 @@
                     <div class="r-nom">
                         <label for="nom" class="label-r">Nom</label>
                         <input type="text" id="nom" placeholder="Nom" required>
-                    </div>
-                    <div class="r-prenom">
+
                         <label for="prenom" class="label-r">Prenom</label>
                         <input type="text" id="prenom" placeholder="Prenom" required>
                     </div>
@@ -518,10 +748,6 @@
                         <label for="nombre" class="label-c">Nombre de chambre</label>
                         <input type="number" name="nombre" id="nombre" placeholder="1" required>
                     </div>
-                    <div class="c-photo">
-                        <label for="photo" class="label-c">Image/Photo</label>
-                        <input type="file" id="photo" name="photo" placeholder="Images" required>
-                    </div>
                     <div class="c-prix_heure">
                         <label for="prix_heure" class="label-c">Prix par heure</label>
                         <input type="number" name="prix_heure" id="prix_heure" placeholder="prix/heure" required>
@@ -533,6 +759,10 @@
                     <div class="c-prix_mois">
                         <label for="prix_mois" class="label-c">Prix par mois</label>
                         <input type="number" name="prix_mois" id="prix_mois" placeholder="prix/mois" required>
+                    </div>
+                    <div class="c-photo">
+                        <label for="photo" class="label-c">Image/Photo</label>
+                        <input type="file" id="photo" name="photo" placeholder="Images" required>
                     </div>
                     <button class="btn" onclick="ModifierChambre()" title="Modification">Enregistrer les modification</button>
                     <button class="annule" onclick="Annule()" title="annuler et retour">Annuler</button>              
