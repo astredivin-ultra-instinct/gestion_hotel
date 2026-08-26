@@ -115,8 +115,10 @@ def add_chambre(request):
 def supp_chambre(request, k):
     chambre = get_object_or_404(Chambre,id = k,user=request.user)
     if request.method == 'POST':
-        chambre.delete()
-        chambre.refresh_from_db()
+        if chambre.reserver:
+            return JsonResponse({'success': False, 'message': "Suppression impossible! Cette chambre à été reservée"})
+        else:
+            chambre.delete()
         if not chambre:
             return JsonResponse({'success':True, 'message':"Supprimé avec succès", 'redirect_url': reverse('profiles')})
         else :
@@ -246,3 +248,21 @@ def deconnexion(request):
     else:
         return JsonResponse({'success':False, 'message':"Méthode non autorisée!"})
 
+@login_required
+def chambre_enr(request):
+    chambre = Chambre.objects.filter(user = request.user)
+    data = []
+    for c in chambre:
+        data.append({
+            'id': c.id,
+            'numero': c.numero,
+            'etage': c.etage,
+            'prix_heure': c.prix_heure,
+            'prix_jour': c.prix_jour,
+            'prix_mois': c.prix_mois,
+            'photo': c.photo.url if c.photo else ''
+        })
+    return JsonResponse(data, safe=False)
+
+def users(request) :
+    return render(request, 'users.html')

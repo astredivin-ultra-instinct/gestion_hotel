@@ -274,7 +274,7 @@
             display: block;
             align-items: center;
             justify-content: center;
-            width: 100%;
+            width: 150%;
             max-width: 450px;
             padding: 40px 40px;
             overflow-y: auto;
@@ -284,13 +284,14 @@
             justify-content: center;
             display: block;
             width: 100%;
-            max-width: 100%;
+            max-width: 450px;
             padding: auto;
             margin-top: 20px;
          }
         
         img {
             width: 100%;
+            border: 3px solid #1557d6;
         }
         a {
          text-decoration: none;
@@ -334,16 +335,16 @@
             cursor: pointer;
         }
         #modifier, #form, .pro{
-            margin-top: 20px;
+            margin-top: 40px;
         }
         .add.active{
             background-color: rgb(22, 51, 233);
         }
         .page {
-            margin-top: 70px;
+            margin-top: 0px;
         }
         .main{
-            margin-top: 15px;
+            margin-top: 10px;
         }
         .titre {
             border-top: 0;
@@ -372,7 +373,6 @@
             border: 1px solid rgb(26, 59, 245);
             width: 100%;
             height: 35px;
-            border-radius: 12px;
             font-size: 17px;
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
@@ -583,8 +583,50 @@
     .preview-container {
         grid-template-columns: repeat(2, 1fr);
     }
-}
+} 
 
+    .option {
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .modifier, .supprimer {
+        width: 100%;
+        flex-direction: column;
+        border: none;
+        background-color: #1557d6;
+        color: white;
+        font-size: 17px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        margin-top: 2px;  
+    }
+    .modifier:hover, .supprimer:hover {
+        background-color: #153c84;
+    }
+    .modifier:active, .supprimer:active{
+        transform: scale(1.1);
+    }
+    .re {
+        width: 100%;
+        margin-top: 8px;
+    }
+    .retour {
+        background-color: white;
+        color: black;
+        border: 2px solid #1557d6;
+        border-radius: 12px;
+        text-decoration: none;
+        width: 100%;
+        padding: 4px 12px;
+    }
+    .retour:hover {
+        background-color: #153c84;
+        color: white;
+    }
+    .retour:active{
+        transform: scale(1.1);
+    }
     </style>
 </head>
 <body>
@@ -663,7 +705,7 @@
                     </div>
                     <div class="c-prix_mois">
                         <label for="prix_mois" class="label-c">Prix par mois</label>
-                        <input type="number" id="prix_mois" placeholder="prix/mois" required>
+                        <input type="number" id="prix_mois" placeholder="prix/mois">
                     </div>
                     <div class="c-photo">
                         <div class="photo-header">
@@ -690,7 +732,7 @@
                                 Ajouter une image
                             </div>
                         </label>
-                        <input type="file" id="photo" accept="image/*" multiple placeholder="Images" hidden required>
+                        <input type="file" id="photo" name="photo" accept="image/*" multiple placeholder="Images" hidden>
                         <div id="previewContainer" class="preview-container"></div>
                     </div>
                     <button class="btn" type="submit" title="ajouter une chambre">Ajouter</button>                
@@ -732,6 +774,9 @@
                     <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
                     <button onclick="Supprimer()" class="supprimer">Supprimer</button>
                 </div>
+                <div class="re">
+                    <a href=" " class="retour">Retour </a>
+                </div>
             </div>
             <form action="" id="Mod_form">
                 {% csrf_token %}
@@ -761,8 +806,32 @@
                         <input type="number" name="prix_mois" id="prix_mois" placeholder="prix/mois" required>
                     </div>
                     <div class="c-photo">
-                        <label for="photo" class="label-c">Image/Photo</label>
-                        <input type="file" id="photo" name="photo" placeholder="Images" required>
+                        <div class="photo-header">
+                            <div class="photo-icon">
+                                📸
+                                <i class="fa-solid fa-images"></i>
+                            </div>
+                            <div class="photo-text">
+                                <div class="photo-title">Ajouter des images</div>
+                                <div class="photo-subtitle">
+                                    Ajouter entre 1 et 5 images
+                                </div>
+                            </div>
+                            <div class="photo-count">
+                                <span id="photoCount">0</span> / 5
+                            </div>
+                        </div>
+                        <label for="photo" class="upload-zone">
+                            <div class="upload-plus">
+                                🌄
+                                <i class="fa-solid fa-plus"></i>
+                            </div>
+                            <div class="upload-text">
+                                Ajouter une image
+                            </div>
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*" multiple placeholder="Images" hidden>
+                        <div id="previewContainer" class="preview-container"></div>
                     </div>
                     <button class="btn" onclick="ModifierChambre()" title="Modification">Enregistrer les modification</button>
                     <button class="annule" onclick="Annule()" title="annuler et retour">Annuler</button>              

@@ -1,0 +1,388 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            min-height: 100vh;
+            overflow: auto;
+            background: transparent;
+            background-color: rgba(240, 240, 244, 0.95);
+            color: rgb(16, 14, 14);
+            overflow-x: hidden;
+
+
+        }
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px;
+        }
+        header {
+            height: auto;
+            min-height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color:rgb(22, 51, 233);
+            color: rgb(240, 241, 247);
+            border-bottom: 1px solid;
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            flex-direction: column;
+            left: 0;
+            padding: 10px 20px;
+            border-color: rgb(32, 114, 180);
+            }
+        
+        .main {
+            padding: 15px;
+            margin-bottom: 15px;
+            margin-top: 5px;
+            padding-bottom: 70px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+        footer {
+            height: auto;
+            min-height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color:rgb(22, 51, 233);
+            color: rgb(240, 241, 247);
+            border-bottom: 1px solid;
+            position: fixed;
+            z-index: 10;
+            width: 100%;
+            flex-direction: column;
+            left: 0;
+            padding: 10px 20px;
+            border-color: rgb(32, 114, 180);
+            bottom: 0;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: rgb(22, 51, 233);
+            border: transparent;
+            border-radius: 24px;
+            padding: 10px 15px;
+            margin-top: 10px;
+            color: white;
+            cursor: pointer;
+        }
+        .btn:hover{
+            background-color: rgb(15, 30, 123);
+        }
+        .btn:active {
+            transform: scale(1.1);
+        }
+        #tarif{
+            width: 100%;
+            max-width: 450px;
+            padding: 12px 12px;
+            text-align: center;
+            justify-content: center;
+            border: 2px solid rgb(137, 141, 142);
+            border-radius: 13px;         
+        }
+
+        .recherche {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .nav{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .nome {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            color: blue;
+        }
+        .rechercher{
+            font-size: 15px;
+            background-color: white;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            text-align: center;
+            justify-content: center;
+            border: 2px solid rgb(239, 244, 246);
+            border-radius: 15px;
+            width: 100%;
+            padding: 14px 14px;
+            margin-top: 15px;
+            color: rgb(7, 28, 214);
+        }
+        .rechercher:focus {
+            border-color: rgb(0, 157, 255);
+            outline: none;
+            border: 2px solid aqua;
+            box-shadow: 0 0 10px rgb(8, 219, 242);
+        }
+        .rechercher input::placeholder {
+            font-size: italic;
+        }
+        h3 {
+            width: 100%;
+            padding: 17px 15px;
+            color: white;
+            margin-top: 10px;
+        }
+        .head {
+            background-color: transparent;
+            border: 1px solid rgb(228, 230, 230);
+            padding: 10px 12px;
+            background-color: transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            color: rgb(250, 248, 248);
+            
+        } 
+        .head:active {
+            transform: scale(1.1);
+        }
+ 
+        .head.active {
+            background-color: rgb(237, 237, 239);
+            color: black;
+        }
+        #message {
+            width: 100%;
+            max-width: 450px;
+            padding: 12px 12px;
+            text-align: center;
+            justify-content: center;
+            /*border: 1px solid rgb(229, 24, 24);*/
+            border-radius: 13px;
+            margin-top: 80px;
+        }
+
+        .contenu {
+            display: block;
+            align-items: center;
+            justify-content: center;
+            width: 150%;
+            max-width: 450px;
+            padding: 40px 40px;
+            overflow-y: auto;
+        }
+        .chambre-card {
+            align-items: center;
+            justify-content: center;
+            display: block;
+            width: 100%;
+            max-width: 450px;
+            padding: auto;
+            margin-top: 20px;
+         }
+        
+        img {
+            width: 100%;
+            border: 3px solid #1557d6;
+        }
+        a {
+         text-decoration: none;
+         color: rgb(22, 51, 233);
+        }
+        .posteur { 
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .rech {
+            color: rgb(245, 246, 246);
+            width: 24%;
+            margin-top: 15px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .rech:hover {
+            text-decoration: blue;
+            
+        }
+        .tete {
+            justify-content: space-between;
+            align-items: center;
+            display: flex;
+            width: 100%;
+            gap: 15px;
+            height: 55px;
+            background-color: rgb(22, 51, 233);
+        }
+        .opt {
+            background-color: transparent;
+            border: none; 
+            font-size: 24px;
+            color: white;
+            padding: 8px;
+               }
+        .opt:hover {
+            background-color: blue;
+            cursor: pointer;
+        }
+        #modifier, #form, .pro{
+            margin-top: 40px;
+        }
+        .add.active{
+            background-color: rgb(22, 51, 233);
+        }
+        .page {
+            margin-top: 0px;
+        }
+        .main{
+            margin-top: 10px;
+        }
+        .titre {
+            border-top: 0;
+            background-color: transparent;
+            border-radius: 5cqmax;
+            border: 5px solid rgb(20, 187, 228);
+            padding: 5px 25px;
+            color: beige;
+        }
+
+        h5 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: gray;
+        }
+        h4 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(14, 22, 174);
+            background-color: white;
+            border: 1px solid rgb(26, 59, 245);
+            width: 100%;
+            height: 35px;
+            font-size: 17px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        .tarif {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .mois, .heure, .jour {
+            background-color: rgb(22, 51, 233);
+            border: 2px solid rgb(246, 246, 247);
+            border-radius: 10px;
+            width: 100%;
+            font-size: 20px;
+            color: white;
+            font-family: 'Times New Roman', Times, serif;
+            padding: 5px;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            cursor: pointer;
+            margin-right: 5px;
+
+        }
+        .prof {
+            background-color: rgb(22, 51, 233);
+        }
+    </style>
+</head>
+<body>
+    <script src="{% static 'reservation/js/profile_users.js' %}" defer></script>
+
+    <div class="container">
+        <h2>La plateforme de reservation d'hotel</h2>
+
+        <header>
+            <div class="nome">
+                <!--h2 class="titre">MY RESERVA HOTEL</h2-->
+            </div>
+            <div class="recherche">
+                <input class="rechercher" type="text" name="q" value="{{query}}" placeholder="Rechercher un hotel... 🔍">
+                <button onclick="Rechercher()" class="rech">Rechercher</button>
+            </div>
+        </header>
+        <div class ="main">
+
+            <div id="acceuil" class="page" >
+                <div class="acceuil-contenaire">
+                    <br>
+                    <br>
+                    <div class="posteur">
+                        <div class="contenu">
+                        </div>           
+                    </div>
+                </div>
+            </div>
+            <div id="message">
+
+            </div>
+            <form action="" id="Rform">
+                <div id="reservation" class="page" style="display: none;">
+                    <div class="r-nom">
+                        <label for="nom" class="label-r">Nom</label>
+                        <input type="text" id="nom" placeholder="Nom" required>
+
+                        <label for="prenom" class="label-r">Prenom</label>
+                        <input type="text" id="prenom" placeholder="Prenom" required>
+                    </div>
+                    <div class="tel">
+                        <label for="tel" class="label-r">Télephone</label>
+                        <input type="tel" id="tel" placeholder="+226 75002136" required>
+                    </div>
+                    <div class="r-tarif">
+                        <label for="tarif" class="label-r">Séjour</label>
+                            <select name="tarif" id="tarif">
+                                <option value="heure">heure</option>
+                                <option value="jour">Jour</option>
+                                <option value="mois">Mois</option>
+                            </select>
+                    </div>
+                    <div class="r-temps">
+                        <label for="temps" class="label-r">Temps</label>
+                        <input type="number" id="temps" placeholder="nombre de jour/heure/mois" required>
+                    </div>
+                    <button type="submit" title="valider et payer" class="btn">Passer au paiement</button>
+                </div>
+            </form>
+            <div id="contenu_recherche" class="page" style="display: none;">
+
+            </div>
+        </div>
+        <footer>
+            <div class="nav">
+                <button onclick="afficherPage('acceuil')" class="head active" title="acceuil principal">🏠 Accueil</button>
+                <button onclick="afficherPage('reservations')" class="head" title="reservation des clients">🕐Historiques</button>
+                <button onclick="afficherPage('profil')" class="head" title="mon profile">☰</button>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>
