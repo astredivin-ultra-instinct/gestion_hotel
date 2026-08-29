@@ -62,7 +62,7 @@ async function soummette() {
     }*/
     const rest = await sendReq('/creation_compte/', data);
     if (rest.success) {
-        console(rest.message);
+        console.log(rest.message);
         Message(rest.message, 'success');
         document.getElementById('form').reset();
         window.location.href = rest.redirect_url;

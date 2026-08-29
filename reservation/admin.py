@@ -8,6 +8,11 @@ class HotelAdmin(admin.ModelAdmin):
 
 @admin.register(Chambre)
 class Chambre(admin.ModelAdmin):
-    list_display = ('numero','etage','photo','prix_heure','prix_jour','prix_mois','commentaire')
+    list_display = ('numero','etage','reserver','prix_heure','prix_jour','prix_mois','commentaire')
     search_fields = ('numero','etage')
 # Register your models here.
+
+@admin.register(Reservation)
+class Reservation(admin.ModelAdmin):
+    list_display = ('nom','tarif','total','tarif','chambre')
+    search_fields = ('nom', 'prenom')

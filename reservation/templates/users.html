@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
     <title>Profile</title>
     <style>
         * {
@@ -84,7 +86,7 @@
             width: 100%;
             background-color: rgb(22, 51, 233);
             border: transparent;
-            border-radius: 24px;
+            border-radius: 4px;
             padding: 10px 15px;
             margin-top: 10px;
             color: white;
@@ -96,16 +98,50 @@
         .btn:active {
             transform: scale(1.1);
         }
+        .annule {
+            width: 100%;
+            background-color: transparent;
+            border-radius: 24px;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: 1px solid black;
+        }
+        .annule:hover {
+            background-color: rgb(247, 74, 74);
+        }
+        form input {
+            width: 100%;
+            max-width: 450px;
+            padding: 12px 12px;
+            text-align: center;
+            justify-content: center;
+            border: 1px solid rgb(137, 141, 142);
+            border-radius: 3px;
+        }
+
         #tarif{
             width: 100%;
             max-width: 450px;
             padding: 12px 12px;
             text-align: center;
             justify-content: center;
-            border: 2px solid rgb(137, 141, 142);
-            border-radius: 13px;         
+            border: 1px solid rgb(137, 141, 142);
+            border-radius: 3px;         
         }
+        form input:focus {
+            border-color: rgba(246, 10, 10, 0.877);
+            outline: none;
+            box-shadow: 0 0 10px red;
 
+        }
+        form label {
+            display: flex;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            justify-content: center;
+            font-size: 17px;
+        }
         .recherche {
             display: flex;
             justify-content: center;
@@ -127,27 +163,42 @@
             color: blue;
         }
         .rechercher{
-            font-size: 15px;
+            font-size: 12px;
             background-color: white;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             text-align: center;
             justify-content: center;
             border: 2px solid rgb(239, 244, 246);
-            border-radius: 15px;
+            border-radius: 7px;
             width: 100%;
             padding: 14px 14px;
             margin-top: 15px;
-            color: rgb(7, 28, 214);
+            color: rgb(10, 12, 23);
         }
         .rechercher:focus {
-            border-color: rgb(0, 157, 255);
+            border-color: rgb(255, 0, 0);
             outline: none;
-            border: 2px solid aqua;
-            box-shadow: 0 0 10px rgb(8, 219, 242);
+            border: 1px solid rgb(255, 0, 0);
+            box-shadow: 0 0 10px rgb(242, 8, 8);
         }
         .rechercher input::placeholder {
             font-size: italic;
         }
+        /*h2 {
+            font-size: 15px;
+            color: rgb(244, 244, 251);
+            background-color: rgba(244, 246, 247, 0.978);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            justify-content: center;
+            border: 1px solid black;
+            border-color: rgb(49, 0, 128);
+            border-radius: 15px;
+            width: 100%;
+            padding: 14px 14px;
+
+        }*/
         h3 {
             width: 100%;
             padding: 17px 15px;
@@ -182,7 +233,31 @@
             border-radius: 13px;
             margin-top: 80px;
         }
-
+        .dec {
+            font-size: 15px;
+            color: rgb(246, 18, 18);
+            background-color: transparent;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            justify-content: center;
+            border-radius: 15px;
+            border: 1px solid black;
+            width: 35%;
+            padding: 12px 18px;
+            margin-top: 400px;
+            cursor: pointer;
+        }
+        .dec:hover{
+            background-color: rgba(226, 72, 72, 0.5);
+            transform: stretch();
+            /*filter: frost();
+            animation: pour();
+            gravity: cursor;*/
+        }
+        .dec:active{
+            transform: scale(1.1);
+        }
         .contenu {
             display: block;
             align-items: center;
@@ -227,6 +302,15 @@
             text-decoration: blue;
             
         }
+        .op {
+            color: white;
+            width: 34px;
+            border: none;
+            cursor: pointer;
+            background-color: transparent;
+            margin-top: 15px;
+            margin-right: 15px;
+        }
         .tete {
             justify-content: space-between;
             align-items: center;
@@ -267,7 +351,10 @@
             padding: 5px 25px;
             color: beige;
         }
-
+        #para {
+            margin-top: 100px;
+            width: 100%;
+        }
         h5 {
             display: flex;
             align-items: center;
@@ -286,20 +373,20 @@
             font-size: 17px;
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
-        .tarif {
+                .tarif {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
         }
         .mois, .heure, .jour {
-            background-color: rgb(22, 51, 233);
+            background-color: rgb(208, 220, 233);
             border: 2px solid rgb(246, 246, 247);
-            border-radius: 10px;
+            border-radius: 8px;
             width: 100%;
-            font-size: 20px;
-            color: white;
-            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            color: #0c295f;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
             padding: 5px;
             align-items: center;
             justify-content: center;
@@ -308,9 +395,73 @@
             margin-right: 5px;
 
         }
-        .prof {
-            background-color: rgb(22, 51, 233);
+        .slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider .slide {
+    display: none;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.slider .slide.active {
+    display: block;
+}
+
+.slider .prev, .slider .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.4);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    padding: 0 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.slider .prev { left: 0; }
+.slider .next { right: 0; }
+
+.bullets {
+    text-align: center;
+    padding: 6px 0;
+}
+
+.bullet {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #ccc;
+    margin: 0 3px;
+    cursor: pointer;
+}
+
+.bullet.active { background: #333; }
+
+h7 {
+    color: black;
+}
+.btn-grise {
+    background-color: #999;
+    color: #fff;
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+        .room-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid;
+            object-fit: cover;
+            background: #e9edf5;
         }
+
     </style>
 </head>
 <body>
@@ -324,7 +475,8 @@
                 <!--h2 class="titre">MY RESERVA HOTEL</h2-->
             </div>
             <div class="recherche">
-                <input class="rechercher" type="text" name="q" value="{{query}}" placeholder="Rechercher un hotel... 🔍">
+                <button class="op" title="mon profile">☰</button>
+                <input class="rechercher" type="text" name="q" value="{{query}}" placeholder="Rechercher un hôtel, une ville, un secteur... 🔍">
                 <button onclick="Rechercher()" class="rech">Rechercher</button>
             </div>
         </header>
@@ -344,6 +496,7 @@
 
             </div>
             <form action="" id="Rform">
+                {% csrf_token %}
                 <div id="reservation" class="page" style="display: none;">
                     <div class="r-nom">
                         <label for="nom" class="label-r">Nom</label>
@@ -374,12 +527,18 @@
             <div id="contenu_recherche" class="page" style="display: none;">
 
             </div>
+            <div id="favoris" class="page" style="display: none;">
+                <h5>Aucun favoris pour l'instant</h5>
+            </div>
         </div>
         <footer>
             <div class="nav">
-                <button onclick="afficherPage('acceuil')" class="head active" title="acceuil principal">🏠 Accueil</button>
-                <button onclick="afficherPage('reservations')" class="head" title="reservation des clients">🕐Historiques</button>
-                <button onclick="afficherPage('profil')" class="head" title="mon profile">☰</button>
+                <button onclick="afficherPage('acceuil')" class="head active" title="acceuil principal">
+                    <i class="ti ti-home"></i> Accueil</button>
+                <button onclick="afficherPage('favoris')" class="head" title="reservation des clients">
+                    <i class="ti ti-heart"></i> Favoris</button>
+                <button onclick="afficherPage('reservations')" class="head" title="reservation des clients">
+                    <i class="ti ti-history"></i> Historiques</button>
             </div>
         </footer>
     </div>

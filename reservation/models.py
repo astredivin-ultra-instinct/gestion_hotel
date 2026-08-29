@@ -16,7 +16,7 @@ class Hotel(models.Model):
     
 class Chambre(models.Model):
     numero = models.IntegerField()
-    photo = models.ImageField(upload_to='photos_dhotel/')
+    #photo = models.ImageField(upload_to='photos_dhotel/')
     etage = models.IntegerField()
     nombre = models.IntegerField()
     prix_heure =models.IntegerField()
@@ -26,6 +26,12 @@ class Chambre(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     reserver = models.BooleanField(default=False)
+
+class ChambrePhoto(models.Model):
+    chambre = models.ForeignKey(Chambre, on_delete=models.CASCADE, related_name='photos')
+    photo = models.ImageField(upload_to='photos_dhotel/')
+    class Meta:
+        ordering = ['id']
 
 class Reservation(models.Model):
     nom = models.CharField(max_length=30)
@@ -41,6 +47,5 @@ class Reservation(models.Model):
     tarif = models.CharField(max_length=10, choices=TARIF, default ='jour')
     total = models.DecimalField(max_digits=15,decimal_places=0)
     chambre = models.ForeignKey(Chambre, on_delete=models.CASCADE)
-    util = models.OneToOneField(User, on_deletemodels.CASCADE)
-    #date_debut = models.DateTime()
-    #date_fin = models.DateTime()
+    date_debut = models.DateTimeField(auto_now_add=True,null=False)
+    #date_fin = models.DateTimeField(null=True)

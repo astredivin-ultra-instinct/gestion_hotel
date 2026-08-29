@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Hotel, Reservation, Chambre
 from django.http import JsonResponse
-from .models import Hotel, Chambre, Reservation
+from .models import Hotel, Chambre, Reservation, ChambrePhoto
 from django.contrib.auth.forms import AuthenticationForm
 import json
 from django.db.models import Q
@@ -28,29 +28,49 @@ def profil(request):
             'photo': p.photo.url if p.photo else ''
         }
     return JsonResponse(data, safe=False)
+from datetime import timedelta
+def calculer_date_fin(reservation):
+    debut = reservation.date_debut
+    tarif = reservation.tarif   
+    temps = reservation.temps  
 
+    if tarif == 'heure':
+        return debut + timedelta(hours=temps)
+    elif tarif == 'jour':
+         return debut + timedelta(days=temps)
+    elif tarif == 'mois':
+        return debut + timedelta(days=temps * 30)
+    return None
 def affichage(request):
     #data = json.loads(request.body)
     chambres = Chambre.objects.all()
     data = []
     for c in chambres:
+        reservation = c.reservation_set.last()
+        date_fin =None
+        if reservation and c.reserver:
+            df = calculer_date_fin(reservation)
+            date_fin = df.isoformat() if df else None
         data.append({
             'id': c.id,
             'numero' : c.numero,
             'etage' : c.etage,
-            'photo': c.photo.url if c.photo else '',
+            'photos': [request.build_absolute_uri(p.photo.url) for p in c.photos.all()],
             'prix_heure' : c.prix_heure,
             'prix_jour' : c.prix_jour,
             'prix_mois' : c.prix_mois,
             'hotel' : c.hotel.nom,
+            'hotel_tof': c.hotel.photo.url if c.hotel.photo else '',
             'localisation': c.hotel.localisation,
             'tel': c.hotel.tel,
             'email': c.hotel.email,
             'ville': c.hotel.ville,
             'secteur': c.hotel.secteur,
+            'reserver': c.reserver,
+            'date_fin': date_fin,
         })
     return JsonResponse(data, safe = False)
-
+@login_required
 def profiles(request):
     return render(request, 'profiles.html')
 
@@ -107,6 +127,12 @@ def add_chambre(request):
             chambre.user = request.user
             chambre.hotel = request.user.hotel
             chambre.save()
+            photos = request.FILES.getlist('photos')
+            if not photos:
+                return JsonResponse ({'success':False,'message':"Vous devez ajouter au mois une photo:"})
+            for photo in photos[:5]:
+                ChambrePhoto.objects.create(chambre = chambre, photo=photo)
+            
             return JsonResponse({'success':True,'message':"Chambre ajouté avec succès",'redirect_url':reverse('profiles')})
         else:
             return JsonResponse({'success':False,'error':form.errors.as_json()})
@@ -176,12 +202,13 @@ def reservation(request):
     data = []
     for r in reservation:
         data.append({
+        
         'id': r.id,
         'nom': r.nom,
         'prenom': r.prenom,
         'tel': r.tel,
         'temps': r.temps,
-        'total': r.total,
+        'total':r.total,
         'numero': r.chambre.numero,
         'etage': r.chambre.etage,
         'tarif': r.tarif,
@@ -221,12 +248,13 @@ def rechercher(request):
                 'secteur': c.hotel.secteur,
                 'nom': c.hotel.nom,
                 'tel': c.hotel.tel,
+                'tof': c.hotel.photo.url if c.hotel.photo else '',
                 'numero': c.numero,
                 'etage': c.etage,
                 'prix_heure': c.prix_heure,
                 'prix_jour': c.prix_jour,
                 'prix_mois': c.prix_mois,
-                'photo': c.photo.url if c.photo else ''
+                'photos': [request.build_absolute_uri(p.photo.url) for p in c.photos.all()],
             }) 
         print("hôtel trouvé")
     else:
@@ -257,10 +285,11 @@ def chambre_enr(request):
             'id': c.id,
             'numero': c.numero,
             'etage': c.etage,
+            'reserver': c.reserver,
             'prix_heure': c.prix_heure,
             'prix_jour': c.prix_jour,
             'prix_mois': c.prix_mois,
-            'photo': c.photo.url if c.photo else ''
+            'photos': [request.build_absolute_uri(p.photo.url) for p in c.photos.all()]
         })
     return JsonResponse(data, safe=False)
 

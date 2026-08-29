@@ -1,499 +1,563 @@
-// page de profile
+let chambreId = null;
+let selectedFiles = [];
 
-function afficherPage(page) {
-    document.querySelectorAll('.page').forEach( p => p.style.display='none');
-    document.getElementById(page).style.display ="block";
+function afficherPage(page, bouton = null) {
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active-page');
+    });
+
+    const element = document.getElementById(page);
+
+    if (element) {
+        element.classList.add('active-page');
+    }
+
+    document.querySelectorAll('.head').forEach(b => {
+        b.classList.remove('active');
+    });
+
+    if (bouton) {
+        bouton.classList.add('active');
+    }
+
+    if (page === 'acceuil') {
+        ChargerChambres();
+    }
+
+    if (page === 'reservations') {
+        Reservation();
+    }
+
+    if (page === 'profil') {
+        profil();
+    }
 }
 
-async function sendReq(url, data){
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+async function sendReq(url, data) {
+    const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
     const resp = await fetch(url, {
         method: 'POST',
-        headers : {
-            'X-CSRFToken': csrftoken
+        headers: {
+            'X-CSRFToken': token
         },
-        body : data
+        body: data
     });
+
     return await resp.json();
 }
 
-//Message
-function Message(texte, type){
+function Message(texte, type) {
     const msg = document.getElementById('message');
+
     msg.textContent = texte;
     msg.style.display = 'block';
-    msg.style.fontSize = '17px';
-    
-   
-    if(type === 'success') {
-        msg.style.color = 'rgb(11, 93, 22)';
-        msg.style.backgroundColor = 'rgb(199, 244, 204)'
-        msg.style.border = '1px solid';
-        msg.style.borderColor = 'rgb(13, 163, 46)'
+
+    if (type === 'success') {
+        msg.style.color = '#15803d';
+        msg.style.backgroundColor = '#dcfce7';
+        msg.style.border = '1px solid #22c55e';
     } else {
-        msg.style.color = 'rgba(230, 14, 14, 0.99)';
-        msg.style.backgroundColor = 'rgba(232, 211, 211, 0.93)'
-        msg.style.border = '1px solid';
-        msg.style.borderColor = 'rgb(239, 22, 22)'
-        
+        msg.style.color = '#dc2626';
+        msg.style.backgroundColor = '#fee2e2';
+        msg.style.border = '1px solid #ef4444';
     }
-    setTimeout( () =>{
+
+    setTimeout(() => {
         msg.style.display = 'none';
     }, 5000);
 }
 
-// Ajout de chambre
+//   CHARGEMENT DES CHAMBRES
 
-async function add_chambre() {
-    //const d = document.getElementById('form');
-    const data = new FormData();
-    data.append('numero', document.querySelector('#numero').value);
-    data.append('etage', document.querySelector('#etage').value);
-    data.append('nombre', document.querySelector('#nombre').value);
-    data.append('prix_heure', document.querySelector('#prix_heure').value);
-    data.append('prix_jour', document.querySelector('#prix_jour').value);
-    data.append('prix_mois', document.querySelector('#prix_mois').value);
-    data.append('photo', document.querySelector('#photo').files[0]);
-    const rep = await sendReq('/ajouter_chambre/', data);
-    if (rep.success) {
-        console.log(rep.message);
-        Message(rep.message, 'success');
-        document.getElementById('form').reset();
-        window.location.href = rep.redirect_url;
-    } else {
-        Message(rep.message, 'error');
-        document.getElementById('form').reset();
-        console.log(rep.message);
-        return;
-    }
-}
+async function ChargerChambres() {
+    const contenu = document.getElementById('rooms');
 
-/*/photo
+    try {
+        const resp = await fetch('/enregistrer/');
+        const data = await resp.json();
 
-const photoInput = document.getElementById("photo");
-const previewContainer = document.getElementById("previewContainer");
-const photoCount = document.getElementById("photoCount");
+        contenu.innerHTML = '';
 
-let selectedFiles = [];
+        document.getElementById('totalChambres').textContent = data.length;
 
-photoInput.addEventListener("change", function () {
-
-    const newFiles = Array.from(this.files);
-
-    // Ajouter les nouvelles images
-    newFiles.forEach(file => {
-
-        if (!file.type.startsWith("image/")) {
+        if (data.length === 0) {
+            contenu.innerHTML = `
+                <div class="stat">
+                    <span>Aucune chambre enregistrée.</span>
+                </div>
+            `;
             return;
         }
 
-        // Éviter les doublons
-        const alreadyExists = selectedFiles.some(
-            existingFile =>
-                existingFile.name === file.name &&
-                existingFile.size === file.size
+        data.forEach(c => {
+            let photo = '';
+
+            if (c.photos && c.photos.length > 0) {
+                photo = c.photos[0];
+            } else if (c.photo) {
+                photo = c.photo;
+            }
+
+            const room = document.createElement('div');
+
+            room.className = 'room';
+
+            room.innerHTML = `
+                <img class="room-photo"
+                     src="${photo}"
+                     alt="Chambre ${c.numero}">
+
+                <div class="room-info">
+                    <h3>Chambre ${c.numero}</h3>
+                    <p>Étage ${c.etage}</p>
+                </div>
+
+                <span class="${c.reserver ? "occupe" : "status"}">
+                    ${c.reserver ? 'Occupé' : 'Disponible'}
+                </span>
+
+                <div class="price">
+                    ${Number(c.prix_jour || 0).toLocaleString('fr-FR')} FCFA
+                    <small>/ jour</small>
+                </div>
+
+                <div class="actions">
+
+                    <button class="action edit"
+                            onclick="Modifier(${c.id})">
+                        <i class="ti ti-edit"></i>
+                    </button>
+
+                    <button class="action delete"
+                            onclick="Option(${c.id})">
+                        <i class="ti ti-trash"></i>
+                    </button>
+
+                </div>
+            `;
+
+            contenu.appendChild(room);
+        });
+
+    } catch (error) {
+        console.error('Erreur chargement chambres :', error);
+    }
+}
+
+//   OPTIONS CHAMBRE
+
+function Option(id) {
+    chambreId = id;
+    afficherPage('option');
+}
+
+function Modifier(id) {
+    chambreId = id;
+
+    fetch('/enregistrer/')
+    .then(resp => resp.json())
+    .then(data => {
+        const chambre = data.find(c => c.id === id);
+
+        if (!chambre) {
+            Message('Chambre introuvable', 'error');
+            return;
+        }
+
+        document.getElementById('mod_numero').value = chambre.numero || '';
+        document.getElementById('mod_etage').value = chambre.etage || '';
+        document.getElementById('mod_nombre').value = chambre.nombre || '';
+        document.getElementById('mod_prix_heure').value = chambre.prix_heure || '';
+        document.getElementById('mod_prix_jour').value = chambre.prix_jour || '';
+        document.getElementById('mod_prix_mois').value = chambre.prix_mois || '';
+
+        afficherPage('modifier');
+    });
+}
+
+//   SUPPRESSION
+
+document.querySelector('.supp').addEventListener('click', async function() {
+    const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    console.log(chambreId)
+    if (!chambreId) {
+        return;
+    }
+
+
+    try {
+        const resp = await fetch(`/supprimer_chambre/${chambreId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': token,
+            },
+        });
+
+        const rep = await resp.json();
+
+        if (rep.success) {
+            Message(rep.message, 'success');
+            chambreId = null;
+            afficherPage('acceuil');
+        } else {
+            Message(rep.message, 'error');
+        }
+
+    } catch (error) {
+        console.error('Erreur:',error, 'status:',rep?.status, 'ok?:', rep.ok);
+        Message('Erreur lors de la suppression', 'error');
+
+    }
+});
+
+  // MODIFICATION
+
+document.getElementById('Mod_form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = new FormData(this);
+
+    const rep = await sendReq(`/modifier_chambre/${chambreId}/`, data);
+
+    if (rep.success) {
+        Message(rep.message, 'success');
+        this.reset();
+        afficherPage('acceuil');
+    } else {
+        Message(rep.message, 'error');
+        console.log(rep.error);
+    }
+});
+
+  // AJOUT CHAMBRE
+
+document.getElementById('form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = new FormData();
+
+    data.append('numero', document.getElementById('numero').value);
+    data.append('etage', document.getElementById('etage').value);
+    data.append('nombre', document.getElementById('nombre').value);
+    data.append('prix_heure', document.getElementById('prix_heure').value);
+    data.append('prix_jour', document.getElementById('prix_jour').value);
+    data.append('prix_mois', document.getElementById('prix_mois').value);
+
+    selectedFiles.forEach(file => {
+        data.append('photos', file);
+    });
+
+    try {
+        const rep = await sendReq('/ajouter_chambre/', data);
+
+        if (rep.success) {
+            Message(rep.message, 'success');
+
+            this.reset();
+
+            selectedFiles = [];
+
+            updatePreview();
+
+            afficherPage('acceuil');
+        } else {
+            Message(rep.message, 'error');
+            console.log(rep.error);
+        }
+
+    } catch (error) {
+        console.error(error);
+        Message('Erreur lors de l’ajout de la chambre', 'error');
+    }
+});
+
+//   PHOTOS
+
+const photoInput = document.getElementById('photo');
+const previewContainer = document.getElementById('previewContainer');
+
+photoInput.addEventListener('change', function() {
+    const files = Array.from(this.files);
+
+    files.forEach(file => {
+        if (!file.type.startsWith('image/')) {
+            return;
+        }
+
+        if (selectedFiles.length >= 5) {
+            return;
+        }
+
+        const existe = selectedFiles.some(f =>
+            f.name === file.name &&
+            f.size === file.size
         );
 
-        if (!alreadyExists && selectedFiles.length < 5) {
+        if (!existe) {
             selectedFiles.push(file);
         }
     });
 
-    updatePreview();
+    this.value = '';
 
-    // Réinitialiser le champ pour pouvoir
-    // sélectionner à nouveau les mêmes images
-    this.value = "";
+    updatePreview();
 });
 
-
 function updatePreview() {
-
-    previewContainer.innerHTML = "";
+    previewContainer.innerHTML = '';
 
     selectedFiles.forEach((file, index) => {
-
         const reader = new FileReader();
 
-        reader.onload = function (event) {
+        reader.onload = function(e) {
+            const div = document.createElement('div');
 
-            const preview = document.createElement("div");
-            preview.classList.add("preview-item");
+            div.className = 'preview-item';
 
-            preview.innerHTML = `
-                <img src="${event.target.result}" alt="Image">
+            div.innerHTML = `
+                <img src="${e.target.result}" alt="Photo">
+                <button type="button"
+                        class="remove-photo"
+                        onclick="removePhoto(${index})">
+                    ×
+                </button>
+            `;
 
-                <button
-                    type="button"
-                    class="remove-photo"
-                    onclick="removePhoto(${index})">
-                    <i class="fa-solid fa-xmark"></i>
-                </button> `
-            ;
-
-            previewContainer.appendChild(preview);
+            previewContainer.appendChild(div);
         };
 
         reader.readAsDataURL(file);
     });
-
-    photoCount.textContent = selectedFiles.length;
 }
-
 
 function removePhoto(index) {
-
     selectedFiles.splice(index, 1);
-
     updatePreview();
-} */
-// Ajout de chambre
-//const doc = document.querySelector('#form');
-document.querySelector('#form').addEventListener('submit',
-    async function(e) {
-        e.preventDefault();
-        await add_chambre();
+}
+
+/* =========================
+   PROFIL
+========================= */
+
+async function profil() {
+    const contenu = document.getElementById('profil');
+
+    try {
+        const resp = await fetch('/profil/');
+        const data = await resp.json();
+
+        let chambreHTML = '';
+
+        const chambreResp = await fetch('/enregistrer/');
+        const chambres = await chambreResp.json();
+
+        chambres.forEach(c => {
+            let photo = '';
+
+            if (c.photos && c.photos.length > 0) {
+                photo = c.photos[0];
+            } else if (c.photo) {
+                photo = c.photo;
+            }
+
+            chambreHTML += `
+                <div class="room">
+                    <img class="room-photo"
+                         src="${photo}"
+                         alt="Chambre ${c.numero}">
+
+                    <div class="room-info">
+                        <h3>Chambre ${c.numero}</h3>
+                        <p>Étage ${c.etage}</p>
+                    </div>
+
+                    <div class="price">
+                        ${Number(c.prix_heure || 0).toLocaleString('fr-FR')}
+                        FCFA
+                        <small>/ heure</small>
+                        ${Number(c.prix_jour || 0).toLocaleString('fr-FR')}
+                        FCFA
+                        <small>/ jour</small>
+                        ${Number(c.prix_mois || 0).toLocaleString('fr-FR')}
+                        FCFA
+                        <small>/ mois</small>
+                    </div>
+                </div>
+            `;
+        });
+
+        contenu.innerHTML = `
+            <div class="title">
+                <h2>Mon profil</h2>
+            </div>
+
+            <div class="profile-card">
+
+                <img class="profile-photo"
+                     src="${data.photo || ''}"
+                     alt="Photo de profil">
+
+                <h2>${data.nom || 'Hôtel'}</h2>
+
+                <div class="profile-info">
+                    <p>${data.ville || ''} secteur ${data.secteur || ''}</p>
+                    <p>Téléphone : +226 ${data.tel || ''}</p>
+                    <p>Email : ${data.email || ''}</p>
+                    <p>
+                        <a href="${data.localisation || '#'}" target="_blank">
+                            Voir la localisation
+                        </a>
+                    </p>
+                </div>
+
+                <div class="profile-rooms">
+                    <h3 class="section-title">Mes chambres</h3>
+                    <div class="rooms">
+                        ${chambreHTML || '<p>Aucune chambre enregistrée.</p>'}
+                    </div>
+                </div>
+
+            </div>
+        `;
+
+        document.getElementById('hotelNom').textContent = data.nom || 'Hôtel';
+
+    } catch (error) {
+        console.error('Erreur profil :', error);
     }
-);
+}
 
-//Deconnection
-document.querySelector('.dec').addEventListener("click",
-    async function(e){
-        e.preventDefault();
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const dec = await fetch('/deconnexion/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken':csrftoken
-        },
-    });
-        const rep = await dec.json();
-        if (rep.success) {
-            Message(rep.message, 'success');
-            window.location.href = rep.redirect_url;
-        } else {
-            Message(rep.message, 'error');
-        }
-    }
-);
+//   RESERVATIONS list
 
+async function Reservation() {
+    const contenu = document.querySelector('.reservation_list');
 
-// affichage dynamique des chambres
-let chambreId = null;
-function affichageChambre() {
-    fetch('/affichage/')
-    .then(response => response.json())
-    .then(data => {
-        const contenu = document.querySelector('.contenu');
+    try {
+        const resp = await fetch('/reservations/');
+        const data = await resp.json();
+
         contenu.innerHTML = '';
-        data.forEach(c => {
-            const chambreCard = document.createElement('div');
-            chambreCard.className = 'chambre-card';
-            //const date = new Date();
-           // console.log("jour:",date);
-            chambreCard.innerHTML = `
-                         <div class="tete"><h3>Hôtel : ${c.hotel}</h3> <button class="opt" onclick="Option(${c.id})">☰</button></div>
-                         <img src="${c.photo}" alt="Image de chambres" >
-                         <p><strong>Numéro de chambre: </strong>${c.numero}</p>
-                         <p><strong>Etage : </strong>${c.etage}</p>
-                         <div class="tarif">
-                         <div class="heure">${c.prix_heure} Fcfa/Heure</div> <br>
-                         <div class="jour">${c.prix_jour} Fcfa/jour</div> <br>
-                         <div class="mois"> ${c.prix_mois} Fcfa/mois</div></div></p>                    
-                         <p><strong>Téléphone : </strong>+266 ${c.tel} </p>
-                         <a href="${c.localisation}" ><strong>📍${c.ville} secteur ${c.secteur}📍<br>Cliquer ici pour voir la localisation :</strong> ${c.hotel}</a>
-                         <button class="btn" onclick="reserverChambre(${c.id})">Reserver</button>
-                         ` ;
-            // ajout de la carte chambre dans le conteneur principal
-            contenu.appendChild(chambreCard);
+
+        document.getElementById('totalReservations').textContent = data.length;
+        const res = await fetch('/enregistrer/');
+        const chambre = await res.json();
+        console.log(data.length > 0 && chambre.length > 0)
+        if(data.length > 0 && chambre.length > 0) {
+            document.getElementById('occupation').textContent= ((data.length / chambre.length) * 100).toFixed(2) + "%";
+        } else {
+            document.getElementById('occupation').textContent = 0 + "%";
+
+        }
+
+
+        if (data.length === 0) {
+            contenu.innerHTML = `
+                <div class="stat">
+                    <span>Aucune réservation en cours.</span>
+                </div>
+            `;
+            return;
+        }
+        let total = 0;
+
+        data.forEach(d => {
+            total += Number(d.total);
+            const reservation = document.createElement('div');
+
+            reservation.className = 'reservation';
+
+            reservation.innerHTML = `
+                <div class="reservation-top">
+                    <h3>
+                        Chambre ${d.numero} <br>
+                        <small>Air+ ${d.etage} </small>
+                    </h3>
+                   
+
+
+                </div>
+                 <hr>
+
+                <p>
+                    <i class="ti ti-user"></i>
+                    Client :
+                    <strong>${d.nom || ''} ${d.prenom || ''}</strong>
+                </p>
+
+                <p>
+                    <i class="ti ti-calendar"></i>
+                    Reservée le :
+                    <strong>${d.date || ''}</strong>
+                </p>
+
+                <p>
+                    <i class="ti ti-clock"></i>
+                    Durée :
+                    <strong>${d.temps || ''} ${d.tarif || ''}</strong>
+                </p>
+
+                <p>
+                    <i class="ti ti-phone"></i>
+                    Téléphone :
+                    <strong>+226 ${d.tel || ''}</strong>
+                </p>
+                <hr>
+                <p>Total payé <br><br>
+                        <strong class="total">
+                        ${Number(d.total || 0).toLocaleString('fr-FR')}
+                        FCFA
+                    </strong>
+                </p>
+            `;
+
+            contenu.appendChild(reservation);
+            document.getElementById('revenus').textContent = total.toLocaleString('fr-FR') + " FCFA";
 
         });
 
-    })
-    .catch(error => console.error('Erreur lors du chargement des données:', error));
-}
-document.addEventListener('DOMContentLoaded', affichageChambre);
-
-//Reservation de chambre
-function reserverChambre(id) {
-    chambreId = id;
-    console.log(chambreId);
-    document.getElementById('acceuil').style.display = 'none';
-    document.getElementById('reservation').style.display = 'block';}
-    //const d = document.getElementById('reservation');
-
-document.querySelector('#Rform').addEventListener('submit',
-    async function(e) {
-        e.preventDefault();
-        const data = new FormData();
-        data.append('nom', document.querySelector('#nom').value);
-        data.append('prenom', document.querySelector('#prenom').value);
-        data.append('tel', document.querySelector('#tel').value);
-        data.append('tarif', document.querySelector('#tarif').value);
-        data.append('temps', document.querySelector('#temps').value);
-        const rep = await sendReq(`/reservation/${chambreId}`, data);
-
-        if (rep.success) {
-            Message(rep.message, 'success');
-            console.log(rep.message);
-            document.getElementById('Rform').reset();
-            window.location.href = `/profiles/`;
-
-        } else {
-            Message(rep.message, 'error');
-            console.log(rep.error);
-        }
+    } catch (error) {
+        console.error('Erreur réservations :', error);
     }
-);
-
-//options (modifier//supprimer)
-
-function Option(id){
-    chambreId = id;
-    document.getElementById('acceuil').style.display= 'none';
-    document.getElementById('profil').style.display= 'none';
-    document.getElementById('option').style.display = 'block';
-    
 }
-// supprimer
-function Supprimer(){
-    document.querySelector('.supp').addEventListener("click",
-    async function(e) {
-        e.preventDefault();
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const resp = await fetch(`/supprimer_chambre/${chambreId}`,{
+
+/* =========================
+   DECONNEXION
+========================= */
+
+document.querySelector('.dec').addEventListener('click', async function(e) {
+    e.preventDefault();
+
+    const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    try {
+        const resp = await fetch('/deconnexion/', {
             method: 'POST',
-            headers :{
-                'X-CSRFToken': csrftoken
+            headers: {
+                'X-CSRFToken': token
             }
         });
+
         const rep = await resp.json();
-        if (rep.success){
+
+        if (rep.success) {
             Message(rep.message, 'success');
-            console.log(rep.success);
             window.location.href = rep.redirect_url;
         } else {
-            Message(rep.message);
-            console.log(rep.message);
-            console.log(rep.error);
-            return;
+            Message(rep.message, 'error');
         }
+
+    } catch (error) {
+        console.error(error);
     }
-)
-}
+});
 
-//Modifier
-async function ModChambre(){
-    const d = document.getElementById('Mod_form');
-    const data = new FormData(d);
-    const rep = await sendReq(`/modifier_chambre/${chambreId}`, data);
-    if (rep.success){
-        Message(rep.message, 'success');
-        document.getElementById('Mod_form').reset();
-        window.location.href = '/profiles/';
-    } else {
-        Message(rep.message, 'error');
-        console.log(rep.error);
-        return;
-    }
-}
-function ModifierChambre() {
-document.querySelector('#Mod_form').addEventListener("submit",
-    async function(e) {
-        e.preventDefault();
-        await ModChambre();
-    }
-)
-}
-//annulé modification
-document.querySelector('.annule').addEventListener('click', 
-    async function(e) {
-        e.preventDefault();
-        document.getElementById('Mod_form').reset();
-        window.location.href = '/profiles/';
-    }
-)
+/* =========================
+   INITIALISATION
+========================= */
 
-
-
-//document.querySelector('#Oform').addEventListener()
-
-//Rechercher
-
-function Rechercher() {
-    const find = document.querySelector('.rechercher').value;
-    console.log(find);
-    if (find === '' | find ===' ') {
-        console.log("Aucun élément saisi");
-        const msg = document.querySelector('.rechercher');
-        msg.placeholder = "Veuillez entrez un élement à rechercher!";
-        //Message("Veuillez entrez un élement à rechercher!", 'error');
-        return;
-    }
-    fetch(`/recherche/?q=${encodeURIComponent(find)}`)
-    .then(rep => rep.json())
-    .then(hotel =>{
-        console.log(hotel.success === false)
-        if (hotel.success === false){
-            const contenu = document.getElementById('contenu_recherche');
-            document.getElementById('acceuil').style.display = 'none';
-            const hotel_trouve = document.createElement('div');
-            contenu.style.display = 'block';
-            document.getElementById('reservations').style.display ='none';
-            document.getElementById('profil').style.display ='none';
-            contenu.innerHTML = '';
-            hotel_trouve.innerHTML = `
-            <h5>Aucun hotel correspond à cette recherche</h5>
-            `;
-            contenu.appendChild(hotel_trouve);
-            document.querySelector('.rechercher').value = '';
-            return;
-        }
-        const contenu = document.getElementById('contenu_recherche');
-        document.getElementById('acceuil').style.display = 'none';
-        contenu.innerHTML = '';
-        contenu.style.display = 'block';
-        hotel.forEach(h =>{
-            const hotel_trouve = document.createElement('div');
-            hotel_trouve.className = 'rech_ok';
-            hotel_trouve.innerHTML = `
-                        <div class="tete"><h3>Hôtel:${h.nom} </h3> </div>
-                        <img src="${h.photo}" alt="images">
-                        <p><strong>Tarifs:</strong><div class="tarif">
-                        <div class="heure">${h.prix_heure} Fcfa/Heure</div>
-                        <div class="jour">${h.prix_jour} Fcfa/jour</div> 
-                        <div class="mois"> ${h.prix_mois} Fcfa/mois</div></div></p>
-                        <p><strong>Ville:</strong>${h.ville} secteur ${h.secteur} </p>
-                        <p><strong>Téléphone:</strong>+226 ${h.tel} </p>
-                        <a href="${h.localisation}">Cliquer ici pour voir la localisation de l'hôtel: ${h.nom}</a> <br>
-                        <button class="btn" onclick="reserverChambre(${h.id})">Réserver</button> <br> <br>      
-            `;
-            contenu.appendChild(hotel_trouve);
-        });
-
-    })
-    .catch(error => console.error("Erreur lors du chargement des données:", error))
-}
-
-//Profil
-function profil() {
-    const contenu = document.getElementById('profil');
-    const contenair = document.createElement('div');
-    contenair.className = 'pro';
-
-fetch('/profil/')
-.then(rep =>rep.json())
-.then(data => {
-    //console.log("donnéez json reçus:",data)
-    contenu.innerHTML = '';
-   // contenu.style.display = 'block';
-
-    contenair.innerHTML += `
-               <h3 class="prof"><strong>${data.nom} </strong></h3>
-               <img src="${data.photo}" alt="photo de profile" >
-               <p>${data.ville} secteur ${data.secteur} </p>
-               <p>Téléphone:+226 ${data.tel}</p>
-               <p>Address E-mail :${data.email}</p>
-               <a href="${data.localisation}">localisation de votre hôtel</a>
-               <hr>
-               <br>
-               <h4>Vos chambres enrégistrer</h4> <br>
-
-
-    `;
-    contenu.appendChild(contenair);
-    return fetch('/enregistrer/')
-})
-.then(rep => rep.json())
-.then(data =>{
-    if(data.length ===0){
-        contenair.innerHTML += `
-        <h5>Aucune chambres enregistrer pour le moment</h5>
-        `;
-    }
-    data.forEach(c =>{
-        contenair.innerHTML += `
-            <div class="tete"><h3>Air+${c.etage} <br> <p>Chambre ${c.numero}</p></h3> <button class="opt" onclick="Option(${c.id})">☰</button></div>
-            <img src="${c.photo} ">
-            <p><strong>Chambre </strong> </p>
-            <div class="tarif">
-                <div class="heure">${c.prix_heure} Fcfa/Heure</div>
-                <div class="jour">${c.prix_jour} Fcfa/jour</div> 
-                <div class="mois"> ${c.prix_mois} Fcfa/mois</div>
-            </div>
-            <br>
-
-    `;
-    contenu.appendChild(contenair);
-    })
-
-})
-.catch(error => console.error("Erreur los du chargement des données !", error));
-}
-
-document.addEventListener('DOMContentLoaded', profil)
-
-//style css
-
-const btn = document.querySelectorAll('.head');
-
-btn.forEach(bt =>{
-    bt.addEventListener('click',
-        function() {
-            btn.forEach(b =>{
-                b.classList.remove('active')
-            });
-            this.classList.add('active')
-        }
-    );
-})
-
-
-//List des reservations
-function Reservation() {
-    fetch('/reservations/')
-    .then(rep => rep.json())
-    .then(data =>{
-        console.log("data:",data)
-        const contenu = document.querySelector('.reservation_list');
-        contenu.innerHTML = '';
-        if(data.length === 0) {
-            contenu.style.display = "block";
-            contenu.innerHTML = `
-            <h5>Aucune reservations en cours</h5>
-            `;
-        }
-        //document.getElementById('acceuil').style.display= 'none';
-        //contenu.style.display ='block';
-        data.forEach(d => {
-            const list = document.createElement('div');
-            list.className = 'list';
-            list.innerHTML = `
-                  <h4><strong>Air+${d.etage} Chambre numero ${d.numero} </strong> </h4>
-                   <p>reservée par <strong>${d.nom} ${d.prenom} le ${d.date} </strong> </p>
-                   <p>Total payé :<strong>${d.total} Fcfa pour ${d.temps} ${d.tarif} </strong></p>
-                    <p><strong>Téléphone: +226 ${d.tel}</strong></p>
-                    <hr>
-                    <hr>
-        `;
-        contenu.appendChild(list);
-        });
-    })
-    .catch(error =>console.error("erreurs lors du chargement des données!", error))
-}
-
-document.addEventListener('DOMContentLoaded', Reservation);
-
-
-            /* Date et heure actu
-            const dt = new Date();
-            const jour = dt.toLocaleDateString('fr-FR', {
-                weekday: 'long',
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
-            const heure = dt.toLocaleTimeString('fr-FR', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });*/
+document.addEventListener('DOMContentLoaded', function() {
+    ChargerChambres();
+    Reservation();
+    profil();
+});
