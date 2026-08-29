@@ -28,6 +28,7 @@ def profil(request):
             'photo': p.photo.url if p.photo else ''
         }
     return JsonResponse(data, safe=False)
+
 from datetime import timedelta
 def calculer_date_fin(reservation):
     debut = reservation.date_debut
@@ -151,6 +152,7 @@ def supp_chambre(request, k):
             return JsonResponse({'success':False, 'message':"Une erreur est survenue lors de suppression veuillez reessayer plutard!"})
     else:
         return JsonResponse({'success':False, 'error':"Methode non autorisé"})
+
 @login_required
 def mod_chambre(request, k):
     chambre = get_object_or_404(Chambre, id=k, user=request.user)
@@ -199,8 +201,10 @@ def reserver_chambre(request, k):
 def reservation(request):
     hotel = Hotel.objects.get(user = request.user)
     reservation = Reservation.objects.filter(chambre__hotel = hotel)
+
     data = []
     for r in reservation:
+        date = calculer_date_fin(r)
         data.append({
         
         'id': r.id,
@@ -212,7 +216,9 @@ def reservation(request):
         'numero': r.chambre.numero,
         'etage': r.chambre.etage,
         'tarif': r.tarif,
-        'date': r.date.strftime('%d/%m/%Y à %Hh%M')
+        'date': r.date.strftime('%d/%m/%Y à %Hh%M'),
+        'date_fin': date.strftime('%d/%m/%Y à %Hh%M'),
+        'motif': r.motif
     })
     return JsonResponse(data, safe=False)
 

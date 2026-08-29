@@ -175,6 +175,7 @@ document.querySelector('#Rform').addEventListener('submit',
         data.append('prenom', document.querySelector('#prenom').value);
         data.append('tel', document.querySelector('#tel').value);
         data.append('tarif', document.querySelector('#tarif').value);
+        data.append('motif', document.querySelector('#motif').value);
         data.append('temps', document.querySelector('#temps').value);
         const rep = await sendReq(`/reservation/${chambreId}`, data);
 
@@ -186,7 +187,7 @@ document.querySelector('#Rform').addEventListener('submit',
 
         } else {
             Message(rep.message, 'error');
-            console.log(rep.error);
+            console.log("erreur detectées");
         }
     }
 );

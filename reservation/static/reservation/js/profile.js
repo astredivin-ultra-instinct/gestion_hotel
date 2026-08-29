@@ -481,13 +481,18 @@ async function Reservation() {
 
                 <p>
                     <i class="ti ti-user"></i>
-                    Client :
+                    Client n°${d.id} :
                     <strong>${d.nom || ''} ${d.prenom || ''}</strong>
+                </p>
+                <p>
+                    <i class="ti ti-clipboard-list"></i>
+                    Motif :
+                    <strong>${d.motif|| ''}</strong>
                 </p>
 
                 <p>
                     <i class="ti ti-calendar"></i>
-                    Reservée le :
+                    Date début :
                     <strong>${d.date || ''}</strong>
                 </p>
 
@@ -496,7 +501,11 @@ async function Reservation() {
                     Durée :
                     <strong>${d.temps || ''} ${d.tarif || ''}</strong>
                 </p>
-
+                <p>
+                    <i class="ti ti-calendar"></i>
+                    Date fin :
+                    <strong>${d.date_fin || ''}</strong>
+                </p>
                 <p>
                     <i class="ti ti-phone"></i>
                     Téléphone :

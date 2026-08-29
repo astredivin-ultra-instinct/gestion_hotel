@@ -44,6 +44,13 @@ class Reservation(models.Model):
         ('heure', 'par heure'),
         ('mois', 'par mois'),
     )
+    MOTIF = (
+        ('travail', 'pour le travail'),
+        ('conge', 'pour un conge'),
+        ('vacance', 'pour des vacances'),
+        ('personnel', "un cas personnel"),
+    )
+    motif = models.CharField(max_length=15, choices=MOTIF, default='travail', null=True)
     tarif = models.CharField(max_length=10, choices=TARIF, default ='jour')
     total = models.DecimalField(max_digits=15,decimal_places=0)
     chambre = models.ForeignKey(Chambre, on_delete=models.CASCADE)

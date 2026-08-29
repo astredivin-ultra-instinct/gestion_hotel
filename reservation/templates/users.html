@@ -42,7 +42,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color:rgb(22, 51, 233);
+            background-color:rgb(55, 162, 234);
             color: rgb(240, 241, 247);
             border-bottom: 1px solid;
             position: fixed;
@@ -69,7 +69,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color:rgb(22, 51, 233);
+            background-color:rgb(55, 162, 234);
             color: rgb(240, 241, 247);
             border-bottom: 1px solid;
             position: fixed;
@@ -84,7 +84,7 @@
 
         .btn {
             width: 100%;
-            background-color: rgb(22, 51, 233);
+            background-color: rgb(55, 162, 234);
             border: transparent;
             border-radius: 4px;
             padding: 10px 15px;
@@ -128,6 +128,16 @@
             border: 1px solid rgb(137, 141, 142);
             border-radius: 3px;         
         }
+        #motif {
+            width: 100%;
+            max-width: 450px;
+            padding: 12px 12px;
+            text-align: center;
+            justify-content: center;
+            border: 1px solid rgb(137, 141, 142);
+            border-radius: 3px;
+        }
+
         form input:focus {
             border-color: rgba(246, 10, 10, 0.877);
             outline: none;
@@ -283,7 +293,7 @@
         }
         a {
          text-decoration: none;
-         color: rgb(22, 51, 233);
+         color: rgb(55, 162, 234);
         }
         .posteur { 
             width: 100%;
@@ -318,7 +328,7 @@
             width: 100%;
             gap: 15px;
             height: 55px;
-            background-color: rgb(22, 51, 233);
+            background-color: rgb(55, 162, 234);
         }
         .opt {
             background-color: transparent;
@@ -335,7 +345,7 @@
             margin-top: 40px;
         }
         .add.active{
-            background-color: rgb(22, 51, 233);
+            background-color: rgb(55, 162, 234);
         }
         .page {
             margin-top: 0px;
@@ -462,6 +472,10 @@ h7 {
             background: #e9edf5;
         }
 
+        .etoile {
+            color: red;
+        }
+
     </style>
 </head>
 <body>
@@ -499,26 +513,35 @@ h7 {
                 {% csrf_token %}
                 <div id="reservation" class="page" style="display: none;">
                     <div class="r-nom">
-                        <label for="nom" class="label-r">Nom</label>
+                        <label for="nom" class="label-r">Nom <div class="etoile">*</div></label>
                         <input type="text" id="nom" placeholder="Nom" required>
 
-                        <label for="prenom" class="label-r">Prenom</label>
+                        <label for="prenom" class="label-r">Prenom<div class="etoile">*</div></label>
                         <input type="text" id="prenom" placeholder="Prenom" required>
                     </div>
                     <div class="tel">
-                        <label for="tel" class="label-r">Télephone</label>
+                        <label for="tel" class="label-r">Télephone<div class="etoile">*</div></label>
                         <input type="tel" id="tel" placeholder="+226 75002136" required>
                     </div>
                     <div class="r-tarif">
-                        <label for="tarif" class="label-r">Séjour</label>
+                        <label for="tarif" class="label-r">Séjour<div class="etoile">*</div></label>
                             <select name="tarif" id="tarif">
                                 <option value="heure">heure</option>
                                 <option value="jour">Jour</option>
                                 <option value="mois">Mois</option>
                             </select>
                     </div>
+                    <div class="r-motif">
+                        <label for="motif" class="label-r">Motif<div class="etoile">*</div> </label>
+                            <select name="motif" id="motif">
+                                <option value="travail">Travail</option>
+                                <option value="conge">Congé</option>
+                                <option value="vacance">Vacance</option>
+                                <option value="personnel">C'est personnel</option>
+                            </select>
+                    </div>
                     <div class="r-temps">
-                        <label for="temps" class="label-r">Temps</label>
+                        <label for="temps" class="label-r">Temps<div class="etoile">*</div></label>
                         <input type="number" id="temps" placeholder="nombre de jour/heure/mois" required>
                     </div>
                     <button type="submit" title="valider et payer" class="btn">Passer au paiement</button>
